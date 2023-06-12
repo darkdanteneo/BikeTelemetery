@@ -81,22 +81,22 @@ data class SaveData (
 )
 {
     override fun toString(): String {
-        return switchStatus.toString() +  ","  + speed.toString() +  ","  + acceleration.toString() +  ","  + odometer.toString() +
-                fuelLevelPercentage.toString() +  ","  + averageSpeed.toString() +  ","  + mileage.toString() +  ","  + topSpeed.toString() +
-                currentRideBestTopSpeed.toString() +  ","  + throttlePercentage.toString() +  ","  + zeroTo60Time.toString() +
-                averageMileageDirect.toString() +  ","  + engineRPM.toString() +  ","  + checksum.toString() +  ","  + currentZeroTo60Time.toString() +
-                currentZeroTo100Time.toString() +  ","  + currentRideBestZeroTo60Time +  ","  + currentRideBestZeroTo100Time +
-                currentRideBestAcceleration +  ","  + currentRideBestDeceleration +  ","  + currentRideAverageSpeed.toString() +
-                clutchSwitchStatus.toString() +  ","  + sideStandStatus.toString() +  ","  + killSwitchStatus.toString() +  ","  + sideStandTellTaleStatus.toString() +
-                engineStartedStatus.toString() +  ","  + gearPosition.toString() +  ","  + gearShiftIndication.toString() +  ","  + vehicleDiagnostics.toString() +
-                absNormal.toString() +  ","  + turnSignalLampStatus.toString() +  ","  + engineTemperature.toString() +  ","  + accumulatedFuelInjectionTime.toString() +
-                backlightIllumination.toString() +  ","  + rideMode.toString() +  ","  + checksum2.toString() +  ","  + vehicleModel.toString() +
-                tellTaleStatus.toString() +  ","  + neutralTaleStatus.toString() +  ","  + tellLeftTaleStatus.toString() +  ","  + tellRightTaleStatus.toString() +
-                highBeamTaleStatus.toString() +  ","  + lfiStatus.toString() +  ","  + emsMilStatus.toString() +  ","  + absMilStatus.toString() +
-                vehicleState3.toString() +  ","  + cruisingRange.toString() +  ","  + acceleraation2.toString() +  ","  + checksum3.toString() +
-                getTripADistance.toString() +  ","  + tripAMileage.toString() +  ","  + tripBDistance.toString() +  ","  + tripBMileage.toString() +
-                rangeDTE.toString() +  ","  + tripAAverageSpeed.toString() +  ","  + tripBAverageSpeed.toString() +  ","  + distanceCovered.toString() +
-                connected.toString() +  ","  + dataType.toString() +  ","  + barometricPressure.toString() +  ","  + intakeAirTemperature.toString() +
+        return switchStatus.toString() +  ","  + speed.toString() +  ","  + acceleration.toString() +  ","  + odometer.toString() + "," +
+                fuelLevelPercentage.toString() +  ","  + averageSpeed.toString() +  ","  + mileage.toString() +  ","  + topSpeed.toString() + "," +
+                currentRideBestTopSpeed.toString() +  ","  + throttlePercentage.toString() +  ","  + zeroTo60Time.toString() + "," +
+                averageMileageDirect.toString() +  ","  + engineRPM.toString() +  ","  + checksum.toString() +  ","  + currentZeroTo60Time.toString() + "," +
+                currentZeroTo100Time.toString() +  ","  + currentRideBestZeroTo60Time +  ","  + currentRideBestZeroTo100Time + "," +
+                currentRideBestAcceleration +  ","  + currentRideBestDeceleration +  ","  + currentRideAverageSpeed.toString() + "," +
+                clutchSwitchStatus.toString() +  ","  + sideStandStatus.toString() +  ","  + killSwitchStatus.toString() +  ","  + sideStandTellTaleStatus.toString() + "," +
+                engineStartedStatus.toString() +  ","  + gearPosition.toString() +  ","  + gearShiftIndication.toString() +  ","  + vehicleDiagnostics.toString() + "," +
+                absNormal.toString() +  ","  + turnSignalLampStatus.toString() +  ","  + engineTemperature.toString() +  ","  + accumulatedFuelInjectionTime.toString() + "," +
+                backlightIllumination.toString() +  ","  + rideMode.toString() +  ","  + checksum2.toString() +  ","  + vehicleModel.toString() + "," +
+                tellTaleStatus.toString() +  ","  + neutralTaleStatus.toString() +  ","  + tellLeftTaleStatus.toString() +  ","  + tellRightTaleStatus.toString() + "," +
+                highBeamTaleStatus.toString() +  ","  + lfiStatus.toString() +  ","  + emsMilStatus.toString() +  ","  + absMilStatus.toString() + "," +
+                vehicleState3.toString() +  ","  + cruisingRange.toString() +  ","  + acceleraation2.toString() +  ","  + checksum3.toString() + "," +
+                getTripADistance.toString() +  ","  + tripAMileage.toString() +  ","  + tripBDistance.toString() +  ","  + tripBMileage.toString() + "," +
+                rangeDTE.toString() +  ","  + tripAAverageSpeed.toString() +  ","  + tripBAverageSpeed.toString() +  ","  + distanceCovered.toString() + "," +
+                connected.toString() +  ","  + dataType.toString() +  ","  + barometricPressure.toString() +  ","  + intakeAirTemperature.toString() + "," +
                 engineTemperatureFrame.toString() +  ","  + fuelInjectionTime.toString() +  ","  + batteryVoltageFrame.toString() +  ","  + fuelInjectionVolume.toString()
     }
 
@@ -282,7 +282,7 @@ data class SaveData (
                     "fuelLevelPercentage" + "," + "averageSpeed" + "," + "mileage" + "," + "topSpeed" + "," +
                     "currentRideBestTopSpeed" + "," + "throttlePercentage" + "," + "zeroTo60Time" + "," +
                     "averageMileageDirect" + "," + "engineRPM" + "," + "checksum" + "," + "currentZeroTo60Time" + "," +
-                    "currentZeroTo100Time" + "," + "currentRideBestZeroTo60Time" +  ","  + "currentRideBestZeroTo100Time" +
+                    "currentZeroTo100Time" + "," + "currentRideBestZeroTo60Time" +  ","  + "currentRideBestZeroTo100Time" + "," +
                     "currentRideBestAcceleration" +  ","  + "currentRideBestDeceleration" +  ","  + "currentRideAverageSpeed" + "," +
                     "clutchSwitchStatus" + "," + "sideStandStatus" + "," + "killSwitchStatus" + "," + "sideStandTellTaleStatus" + "," +
                     "engineStartedStatus" + "," + "gearPosition" + "," + "gearShiftIndication" + "," + "vehicleDiagnostics" + "," +

@@ -61,7 +61,6 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val REQUEST_ENABLE_BT = 1
         const val ACCESS_LOCATION_REQUEST = 2
         lateinit var instance: MainActivity
     }

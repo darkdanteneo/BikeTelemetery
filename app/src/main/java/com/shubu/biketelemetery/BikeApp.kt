@@ -269,7 +269,7 @@ class BikeApp : Application() {
                 clusterData.tripBAverageSpeed = receivedClusterData.tripBAverageSpeed
                 clusterData.distanceCovered = receivedClusterData.distanceCovered
             }
-            updateLocalData()
+            updateLocalDataFull()
         }
 
         fun setClusterData(receivedClusterData: SaveData): Unit {
@@ -361,7 +361,7 @@ class BikeApp : Application() {
         }
 
 
-        private fun updateLocalData() {
+        private fun updateLocalDataFull() {
 //            isConnected = clusterData.connected
             userId = clusterData.userId
             frameNo = clusterData.frameNo
@@ -475,5 +475,74 @@ class BikeApp : Application() {
             tripBAverageSpeed = clusterData.tripBAverageSpeed
             distanceCovered = clusterData.distanceCovered
         }
+
+        private fun updateLocalData() {
+//            isConnected = clusterData.connected
+            dataType = clusterData.dataType
+            barometricPressure = clusterData.barometricPressure
+            intakeAirTemperature = clusterData.intakeAirTemperature
+            engineTemperatureFrame = clusterData.engineTemperatureFrame
+            fuelInjectionTime = clusterData.fuelInjectionTime
+            batteryVoltageFrame = clusterData.batteryVoltageFrame
+            fuelInjectionVolume = clusterData.fuelInjectionVolume
+            switchStatus = clusterData.switchStatus
+            speed = clusterData.speed
+            acceleration = clusterData.acceleration
+            odometer = clusterData.odometer
+            fuelLevelPercentage = clusterData.fuelLevelPercentage
+            averageSpeed = clusterData.averageSpeed
+            mileage = clusterData.mileage
+            topSpeed = clusterData.topSpeed
+            currentRideBestTopSpeed = clusterData.currentRideBestTopSpeed
+            throttlePercentage = clusterData.throttlePercentage
+            zeroTo60Time = clusterData.zeroTo60Time
+            averageMileageDirect = clusterData.averageMileageDirect
+            engineRPM = clusterData.engineRPM
+            checksum = clusterData.checksum
+            currentZeroTo60Time = clusterData.currentZeroTo60Time
+            currentZeroTo100Time = clusterData.currentZeroTo100Time
+            currentRideBestZeroTo60Time = clusterData.currentRideBestZeroTo60Time.toString()
+            currentRideBestZeroTo100Time = clusterData.currentRideBestZeroTo100Time.toString()
+            currentRideBestAcceleration = clusterData.currentRideBestAcceleration.toString()
+            currentRideBestDeceleration = clusterData.currentRideBestDeceleration.toString()
+            currentRideAverageSpeed = clusterData.currentRideAverageSpeed
+            clutchSwitchStatus = clusterData.clutchSwitchStatus
+            sideStandStatus = clusterData.sideStandStatus
+            killSwitchStatus = clusterData.killSwitchStatus
+            sideStandTellTaleStatus = clusterData.sideStandTellTaleStatus
+            engineStartedStatus = clusterData.engineStartedStatus
+            gearPosition = clusterData.gearPosition
+            gearShiftIndication = clusterData.gearShiftIndication
+            vehicleDiagnostics = clusterData.vehicleDiagnostics
+            absNormal = clusterData.absNormal
+            turnSignalLampStatus = clusterData.turnSignalLampStatus
+            engineTemperature = clusterData.engineTemperature
+            accumulatedFuelInjectionTime = clusterData.accumulatedFuelInjectionTime
+            backlightIllumination = clusterData.backlightIllumination
+            rideMode = clusterData.rideMode
+            checksum2 = clusterData.checksum2
+            vehicleModel = clusterData.vehicleModel
+            tellTaleStatus = clusterData.tellTaleStatus
+            neutralTaleStatus = clusterData.neutralTaleStatus
+            tellLeftTaleStatus = clusterData.tellLeftTaleStatus
+            tellRightTaleStatus = clusterData.tellRightTaleStatus
+            highBeamTaleStatus = clusterData.highBeamTaleStatus
+            lfiStatus = clusterData.lfiStatus
+            emsMilStatus = clusterData.emsMilStatus
+            absMilStatus = clusterData.absMilStatus
+            vehicleState3 = clusterData.vehicleState3
+            cruisingRange = clusterData.cruisingRange
+            acceleration2 = clusterData.acceleraation2
+            checksum3 = clusterData.checksum3
+            getTripADistance = clusterData.getTripADistance
+            tripAMileage = clusterData.tripAMileage
+            tripBDistance = clusterData.tripBDistance
+            tripBMileage = clusterData.tripBMileage
+            rangeDTE = clusterData.rangeDTE
+            tripAAverageSpeed = clusterData.tripAAverageSpeed
+            tripBAverageSpeed = clusterData.tripBAverageSpeed
+            distanceCovered = clusterData.distanceCovered
+        }
+
     }
 }
