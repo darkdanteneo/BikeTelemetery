@@ -16,6 +16,7 @@ class BikeApp : Application() {
         lateinit var applicationContext: Context
         var isConnected by mutableStateOf(false);
         var btMAC: String = ""
+        var fuelInjectionVolumeDelta = 0.0;
 
         var dataType by mutableStateOf(-1)
         var userId by mutableStateOf(-1)
@@ -159,6 +160,7 @@ class BikeApp : Application() {
                 clusterData.runTimeSinceEngineStart = receivedClusterData.runTimeSinceEngineStart
                 clusterData.distanceTravelledSinceMILOn = receivedClusterData.distanceTravelledSinceMILOn
                 clusterData.fuelInjectionVolume = receivedClusterData.fuelInjectionVolume
+                fuelInjectionVolumeDelta = (clusterData.fuelInjectionVolume - fuelInjectionVolume).coerceAtLeast(0.0)
             } else if (b != 25) {
                 when (b) {
                     16 -> {
@@ -287,6 +289,7 @@ class BikeApp : Application() {
                 clusterData.fuelInjectionTime = receivedClusterData.fuelInjectionTime
                 clusterData.batteryVoltageFrame = receivedClusterData.batteryVoltageFrame
                 clusterData.fuelInjectionVolume = receivedClusterData.fuelInjectionVolume
+                fuelInjectionVolumeDelta = (clusterData.fuelInjectionVolume - fuelInjectionVolume).coerceAtLeast(0.0)
             } else if (b != 25) {
                 when (b) {
                     16 -> {

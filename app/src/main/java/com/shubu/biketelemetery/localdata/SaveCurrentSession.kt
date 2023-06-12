@@ -34,7 +34,7 @@ class SaveCurrentSession {
             outputStreamWriter = OutputStreamWriter(fileOutputStream)
             if(!BikeApp.COLLECT_ALL_DATA)
             {
-                outputStreamWriter.append(SaveData.getCSVHeader() + "\n")
+                outputStreamWriter.append(SaveData.getCSVHeader() + "," + "fuelInjectionVolumeDelta" + "\n")
             }
         }
         fun appendDataFull(data: ClusterReceivedData) {
@@ -61,7 +61,8 @@ class SaveCurrentSession {
                     BikeApp.getTripADistance.toString() + "," + BikeApp.tripAMileage.toString() + "," + BikeApp.tripBDistance.toString() + "," + BikeApp.tripBMileage.toString() + "," +
                     BikeApp.rangeDTE.toString() + "," + BikeApp.tripAAverageSpeed.toString() + "," + BikeApp.tripBAverageSpeed.toString() + "," + BikeApp.distanceCovered.toString() + "," +
                     BikeApp.isConnected.toString() + "," + BikeApp.dataType.toString() + "," + BikeApp.barometricPressure.toString() + "," + BikeApp.intakeAirTemperature.toString() + "," +
-                    BikeApp.engineTemperatureFrame.toString() + "," + BikeApp.fuelInjectionTime.toString() + "," + BikeApp.batteryVoltageFrame.toString() + "," + BikeApp.fuelInjectionVolume.toString()
+                    BikeApp.engineTemperatureFrame.toString() + "," + BikeApp.fuelInjectionTime.toString() + "," + BikeApp.batteryVoltageFrame.toString() + "," +
+                    BikeApp.fuelInjectionVolume.toString() + "," + BikeApp.fuelInjectionVolumeDelta.toString()
             outputStreamWriter.append(s + "\n")
         }
         fun closeFile()
