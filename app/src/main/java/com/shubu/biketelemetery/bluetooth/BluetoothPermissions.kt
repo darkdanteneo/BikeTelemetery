@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.startActivity
 import com.shubu.biketelemetery.BikeApp
 import com.shubu.biketelemetery.MainActivity
+import com.shubu.biketelemetery.localdata.SaveCurrentSession
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -103,17 +104,32 @@ class BluetoothPermissions {
         }
 
         private fun collectData(bluetoothHandler: BluetoothHandler) {
-            scope.launch {
-                Log.i("data consumption", "consumption started")
-                bluetoothHandler.dataChannel.consumeAsFlow().collect {
-                    withContext(Dispatchers.Main) {
-                        BikeApp.setClusterData(it)
-                        // measurementValue = it.toString().substring(20, it.toString().length - 2).replace("=", "    :    ").split(",").toString()
-                        // measurementValue = it.dataType.toString()
-                        Log.i("data consumption - type", it.dataType.toString())
+            if(BikeApp.COLLECT_ALL_DATA)
+            {
+                scope.launch {
+                    Log.i("data consumption", "consumption started")
+                    bluetoothHandler.dataChannelFull.consumeAsFlow().collect {
+                        withContext(Dispatchers.Main) {
+                            BikeApp.setClusterDataFull(it)
+                            SaveCurrentSession.appendDataFull(it)
+                            // measurementValue = it.toString().substring(20, it.toString().length - 2).replace("=", "    :    ").split(",").toString()
+                            // measurementValue = it.dataType.toString()
+                            // Log.i("data consumption - type", it.dataType.toString())
+                        }
+                    }
+                }
+            } else {
+                scope.launch {
+                    Log.i("data consumption", "consumption started")
+                    bluetoothHandler.dataChannel.consumeAsFlow().collect {
+                        withContext(Dispatchers.Main) {
+                            BikeApp.setClusterData(it)
+                            SaveCurrentSession.appendData(it)
+                        }
                     }
                 }
             }
+
         }
 
 

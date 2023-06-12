@@ -11,6 +11,8 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import com.shubu.biketelemetery.BikeApp
 import com.shubu.biketelemetery.MainActivity
+import com.shubu.biketelemetery.localdata.SaveCurrentSession
+import com.shubu.biketelemetery.localdata.SaveData
 import com.welie.blessed.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -24,9 +26,10 @@ internal class BluetoothHandler private constructor(context: Context) {
     private var currentTimeCounter = 0
     private val secretUUID1 = UUID.fromString("5456534D-5647-5341-5342-454E544F5251")
     private val secretUUID2 = UUID.fromString("00005352-0000-1000-8000-00805F9B34FB")
-    val dataChannel = Channel<ClusterReceivedData>(UNLIMITED)
-    var globalPeripheral: BluetoothPeripheral? = null
-    var connectedWithBike = false
+    val dataChannelFull: Channel<ClusterReceivedData> = Channel<ClusterReceivedData>(UNLIMITED)
+    val dataChannel: Channel<SaveData> = Channel<SaveData>(UNLIMITED)
+    private var globalPeripheral: BluetoothPeripheral? = null
+    private var connectedWithBike = false
 
     private suspend fun sendData(arr: ByteArray) {
         globalPeripheral!!.writeCharacteristic(
@@ -167,7 +170,7 @@ internal class BluetoothHandler private constructor(context: Context) {
 
     private fun sendInitialdata() {
         scope.launch {
-            var name = "Shubu"
+            val name = "Shubu"
             sendData(createRiderNameArray(name))
             delay(400)
             sendData(createRiderNameArray(name))//"5b525368756268616d20536861726d61000000ff".decodeHex()
@@ -179,14 +182,20 @@ internal class BluetoothHandler private constructor(context: Context) {
             delay(1000)
             sendData(EncryptDecryptDataBTData.decryptData("5b5ca38a8682999b9e99ebebebebebebebebebff".decodeHex()))
             delay(500)
-            while (connectedWithBike)
+            try {
+                while (connectedWithBike)
+                {
+                    sendData(getMobileData())
+                    //5b4a0001010000022a320100000c051700000000ff
+                    //sendData(EncryptDecryptDataBTData.decryptData("5b4aff93ebebeee6fdeaebebe3eefcebebebebff".decodeHex()))
+                    Log.i("Sending mobile data", getMobileData().toHex())
+                    delay(2000)
+                }
+            } catch (e: Exception)
             {
-                sendData(getMobileData())
-                //5b4a0001010000022a320100000c051700000000ff
-                //sendData(EncryptDecryptDataBTData.decryptData("5b4aff93ebebeee6fdeaebebe3eefcebebebebff".decodeHex()))
-                Log.i("Sending mobile data", getMobileData().toHex())
-                delay(500)
+                Log.i("Send Data", e.toString())
             }
+
         }
     }
 
@@ -194,7 +203,7 @@ internal class BluetoothHandler private constructor(context: Context) {
         scope.launch {
             try {
                 val mtu = 23//peripheral.requestMtu(23)
-                Log.i("", "MTU is $mtu")
+                // Log.i("", "MTU is $mtu")
                 peripheral.requestConnectionPriority(ConnectionPriority.HIGH)
                 globalPeripheral = peripheral
                 Log.i("Handle Peripheral", "Send initial data")
@@ -217,11 +226,19 @@ internal class BluetoothHandler private constructor(context: Context) {
             globalPeripheral?.observe(it) { value ->
                 val decrypted = EncryptDecryptDataBTData.decryptData(value)
                 // Log.i("Update Notification", "measurement received")
-                Log.i("Update Notification - pre cal measurement value", decrypted.toHex())
+                // Log.i("Update Notification - pre cal measurement value", decrypted.toHex())
                 try {
-                    val measurement = ClusterReceivedData.getParsedData(decrypted)
-                    dataChannel.trySend(measurement)
-                    // Log.i("Update Notification - measurement value", measurement.toString())
+                    if (BikeApp.COLLECT_ALL_DATA)
+                    {
+                        val measurement = ClusterReceivedData.getParsedData(decrypted)
+                        dataChannelFull.trySend(measurement)
+                    }
+                    else
+                    {
+                        val measurement = SaveData.getParsedData(decrypted)
+                        dataChannel.trySend(measurement)
+                    }
+
                 } catch (e: java.lang.Exception) {
                     Log.i("error in decoding data", e.toString())
                     Log.i("Failed input", decrypted.toHex())
@@ -230,6 +247,14 @@ internal class BluetoothHandler private constructor(context: Context) {
                 }
             }
         }
+    }
+
+    private suspend fun stopDataUpdateNotification() {
+        val c = globalPeripheral?.getCharacteristic(secretUUID1, UUID.fromString("00005354-0000-1000-8000-00805F9B34FB"));
+        if (c != null) {
+            Log.i("Update Notification", "Stopped")
+            globalPeripheral?.stopObserving(c)
+        };
     }
 
     companion object {
@@ -254,10 +279,9 @@ internal class BluetoothHandler private constructor(context: Context) {
     init {
         central = BluetoothCentralManager(context)
         Log.i("", "stated scanning")
-        Log.i("mobile data log", getMobileData().toHex())
+        // Log.i("mobile data log", getMobileData().toHex())
 
         central.observeConnectionState { peripheral, state ->
-            Log.i("","Peripheral '${peripheral.name}' is $state")
             val temp = peripheral.address
             Log.i("","Peripheral '${peripheral.name}' is $temp")
             when (state) {
@@ -267,16 +291,19 @@ internal class BluetoothHandler private constructor(context: Context) {
                         BikeApp.isConnected = true
                         connectedWithBike = true
                         BikeApp.btMAC = peripheral.address
+                        SaveCurrentSession.initSessionOutFile()
                     }
                 }
                 ConnectionState.DISCONNECTED -> scope.launch {
+                    Log.i("Bike Connection", "Disconnected")
                     if (peripheral.address == "AC:4D:16:1C:30:7B") {
-                        connectedWithBike = false
+                        Log.i("Bike Connection", "Disconnected")
                         BikeApp.isConnected = false
+                        connectedWithBike = false
+                        BikeApp.btMAC = ""
+                        SaveCurrentSession.closeFile()
+                        stopDataUpdateNotification()
                         delay(15000)
-                        /*val temp2 = BikeApp.getClusterData()
-                        temp2.connected = false;
-                        BikeApp.setClusterData(temp2)*/
                         central.autoConnectPeripheral(central.getPeripheral("AC:4D:16:1C:30:7B"))
                     }
                 }
@@ -284,13 +311,7 @@ internal class BluetoothHandler private constructor(context: Context) {
                 }
             }
         }
-        /*
-                var decode = ClusterReceivedData.getParsedData("5a180000000000403f03a77e000000000000e6ff".decodeHex())
-                decode = ClusterReceivedData.getParsedData("5a19000000033c0015da00000020210000001dff".decodeHex())
-                decode = ClusterReceivedData.getParsedData("5a120000000000000000000000000000000093ff".decodeHex())
-                decode = ClusterReceivedData.getParsedData("5a10000015d6090029540000002900000000fbff".decodeHex())
 
-        */
         central.autoConnectPeripheral(central.getPeripheral("AC:4D:16:1C:30:7B"))
     }
 }

@@ -184,7 +184,7 @@ data class ClusterReceivedData(
             return str2
         }
 
-        private fun getCurrentZeroTo60Time(): Double {
+        fun getCurrentZeroTo60Time(): Double {
             if (getSpeed() <= 0) {
                 f51961y = -1.0
                 f51956t = Date().time
@@ -200,7 +200,7 @@ data class ClusterReceivedData(
             return f51955s
         }
 
-        private fun getThrottlePercentage(): Int {
+        fun getThrottlePercentage(): Int {
             return (localRecievedData!![10].toInt() and 255) / 2
         }
 
@@ -217,7 +217,7 @@ data class ClusterReceivedData(
             return i
         }
 
-        private fun getTopSpeed(): Int {
+        fun getTopSpeed(): Int {
             return localRecievedData!![9].toInt() and 255
         }
 
@@ -256,26 +256,26 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![3].toInt() and 255, 5)
         }
 
-        private fun getTripAAverageSpeed(): Int {
+        fun getTripAAverageSpeed(): Int {
             return localRecievedData!![13].toInt() and 255
         }
 
-        private fun getEmsMilStatus(): Int {
+        fun getEmsMilStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 5)
         }
 
-        private fun getTripADistance(): Double {
+        fun getTripADistance(): Double {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![5], bArr[6])).toDouble() / 10.0
         }
 
-        private fun getEngineRPM(): Double {
+        fun getEngineRPM(): Double {
             val bArr = localRecievedData
             return java.lang.Double.toString(BigInteger(byteArrayOf(bArr!![16], bArr[17])).toDouble())
                 .toDouble()
         }
 
-        private fun getTripAMileage(): Int {
+        fun getTripAMileage(): Int {
             return localRecievedData!![7].toInt() and 255
         }
 
@@ -283,15 +283,15 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![2].toInt() and 255, 3)
         }
 
-        private fun getTripBAverageSpeed(): Int {
+        fun getTripBAverageSpeed(): Int {
             return localRecievedData!![14].toInt() and 255
         }
 
-        private fun getEngineStartedStatus(): Int {
+        fun getEngineStartedStatus(): Int {
             return m11725a(localRecievedData!![15].toInt() and 255, 7)
         }
 
-        private fun getTripBDistance(): Double {
+        fun getTripBDistance(): Double {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![8], bArr[9])).toDouble()
         }
@@ -300,11 +300,11 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![10].toInt() and 255, 3)
         }
 
-        private fun getTripBMileage(): Int {
+        fun getTripBMileage(): Int {
             return localRecievedData!![10].toInt() and 255
         }
 
-        private fun setEngineTemperatureFrame5(): Int {
+        fun setEngineTemperatureFrame5(): Int {
             return (localRecievedData!![8].toInt() and 255) - 40
         }
 
@@ -313,7 +313,7 @@ data class ClusterReceivedData(
             return BigInteger(byteArrayOf(bArr!![8], bArr[9])).toDouble()
         }
 
-        private fun getEngineTemperature(): Int {
+        fun getEngineTemperature(): Int {
             return getEngineTempRaw(
                 String.format(
                     "%02x",
@@ -322,7 +322,7 @@ data class ClusterReceivedData(
             ) - 25
         }
 
-        private fun getDistanceCovered(): Double {
+        fun getDistanceCovered(): Double {
             if (getTripADistance() >= 0.0 && getTripADistance() < f51934N || !f51936P) {
                 f51934N = getTripADistance()
             }
@@ -352,7 +352,7 @@ data class ClusterReceivedData(
             return BigInteger(byteArrayOf(bArr!![13], bArr[14])).toDouble()
         }
 
-        private fun getFuelInjectionTime(): Float {
+        fun getFuelInjectionTime(): Float {
             val bArr = localRecievedData
             return (BigInteger(byteArrayOf(bArr!![9], bArr[10])).divide(BigInteger.valueOf(100L))
                 .toFloat() * 0.001).toFloat()
@@ -362,7 +362,7 @@ data class ClusterReceivedData(
             return localRecievedData!![12].toInt() and 255
         }
 
-        private fun getFuelInjectionVolume(): Double {
+        fun getFuelInjectionVolume(): Double {
             val bArr = localRecievedData
             return (bArr!![17].toInt() and 255 or (bArr[16].toInt() and 255 shl 8)).toDouble()
         }
@@ -372,11 +372,11 @@ data class ClusterReceivedData(
             return (bArr!![10].toInt() and 255).toString() + ":" + (bArr[11].toInt() and 255)
         }
 
-        private fun getFuelLevelPercentage(): Int {
+        fun getFuelLevelPercentage(): Int {
             return localRecievedData!![6].toInt() and 255
         }
 
-        private fun getTurnSignalLampStatus(): Int {
+        fun getTurnSignalLampStatus(): Int {
             val i: Int = localRecievedData!![13].toInt() and 255
             val m11725a = m11725a(i, 2)
             val m11725a2 = m11725a(i, 3)
@@ -390,11 +390,11 @@ data class ClusterReceivedData(
             return localRecievedData!![2].toInt() and 255
         }
 
-        private fun getVehicleDiagnostics(): Int {
+        fun getVehicleDiagnostics(): Int {
             return localRecievedData!![10].toInt() and 255
         }
 
-        private fun getGearPosition(): Int {
+        fun getGearPosition(): Int {
             return try {
                 String.format("%02X", Integer.valueOf(localRecievedData!![5].toInt() and 255))[1].toString().toInt()
             } catch (unused: Exception) {
@@ -422,7 +422,7 @@ data class ClusterReceivedData(
             return localRecievedData!![3].toInt() and 255
         }
 
-        private fun getHighBeamTaleStatus(): Int {
+        fun getHighBeamTaleStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 4)
         }
 
@@ -434,7 +434,7 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![10].toInt() and 255, 5)
         }
 
-        private fun getVehicleState3(): Int {
+        fun getVehicleState3(): Int {
             return localRecievedData!![15].toInt() and 255
         }
 
@@ -446,7 +446,7 @@ data class ClusterReceivedData(
             return localRecievedData!![11].toInt() and 4 === 4
         }
 
-        private fun getIntakeAirTemperatureFrame5(): Int {
+        fun getIntakeAirTemperatureFrame5(): Int {
             return (localRecievedData!![7].toInt() and 255) - 40
         }
 
@@ -458,7 +458,7 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![10].toInt() and 255, 7)
         }
 
-        private fun getZeroTo60Time(): Double {
+        fun getZeroTo60Time(): Double {
             return java.lang.Double.valueOf(df2.format((localRecievedData!![12].toInt() and 255) / 10.0))
                 .toDouble()
         }
@@ -468,7 +468,7 @@ data class ClusterReceivedData(
             return i shr i2 - 1 and 1
         }
 
-        private fun getKillSwitchStatus(): Int {
+        fun getKillSwitchStatus(): Int {
             return m11725a(localRecievedData!![6].toInt() and 255, 1)
         }
 
@@ -542,14 +542,14 @@ data class ClusterReceivedData(
             return b.toInt()
         }*/
 
-        private fun getCurrentRideBestTopSpeed(): Int {
+        fun getCurrentRideBestTopSpeed(): Int {
             if (getSpeed() > intValue) {
                 intValue = getSpeed()
             }
             return intValue
         }
 
-        private fun getAbsMilStatus(): Int {
+        fun getAbsMilStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 6)
         }
 
@@ -575,11 +575,11 @@ data class ClusterReceivedData(
             Utils.saveLocationTagAndLapLog("current ride last lap time " + CurrentRideLastLapTime)
         }*/
 
-        private fun getAbsNormal(): Int {
+        fun getAbsNormal(): Int {
             return m11725a(localRecievedData!![10].toInt() and 255, 8)
         }
 
-        private fun getLfiStatus(): Int {
+        fun getLfiStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 8)
         }
 
@@ -628,7 +628,7 @@ data class ClusterReceivedData(
             m11705g1()
         }*/
 
-        private fun getAcceleration(): Double {
+        fun getAcceleration(): Double {
             return f62114df.format(getAccelerationRaw()).toDouble()
         }
 
@@ -672,7 +672,7 @@ data class ClusterReceivedData(
             return b.toInt() and 15
         }
 
-        private fun getAcceleraation2(): Double {
+        fun getAcceleraation2(): Double {
             return localRecievedData!![6].toDouble()
         }
 
@@ -680,14 +680,14 @@ data class ClusterReceivedData(
             return localRecievedData!![5].toInt() and 255
         }
 
-        private fun getCurrentRideBestAcceleration(d: Double): String? {
+        fun getCurrentRideBestAcceleration(d: Double): String? {
             if (d >= 0.0 && d > parseDouble) {
                 parseDouble = d
             }
             return parseDouble.toString() + " g"
         }
 
-        private fun getAccumulatedFuelInjectionTime(): Float {
+        fun getAccumulatedFuelInjectionTime(): Float {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![15], bArr[16])).divide(BigInteger.valueOf(100L))
                 .toFloat()
@@ -697,18 +697,18 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![10].toInt() and 255, 6)
         }
 
-        private fun getCurrentRideBestDeceleration(d: Double): String? {
+        fun getCurrentRideBestDeceleration(d: Double): String? {
             if (d <= 0.0 && d < parseDouble2) {
                 parseDouble2 = d
             }
             return parseDouble2.toString() + " g"
         }
 
-        private fun getAverageSpeed(): Int {
+        fun getAverageSpeed(): Int {
             return localRecievedData!![7].toInt() and 255
         }
 
-        private fun getMileage(): Int {
+        fun getMileage(): Int {
             if (getSpeed() > 0) {
                 f51930J = localRecievedData!![8].toInt() and 255
             }
@@ -728,19 +728,19 @@ data class ClusterReceivedData(
             )
         }*/
 
-        private fun getAvgMilageDirect(): Int {
+        fun getAvgMilageDirect(): Int {
             return localRecievedData!![13].toInt() and 255
         }
 
-        private fun getNeutralTaleStatus(): Int {
+        fun getNeutralTaleStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 1)
         }
 
-        private fun getBacklightIllumination(): Int {
+        fun getBacklightIllumination(): Int {
             return getIllumination(localRecievedData!![17])
         }
 
-        private fun getOdometer(): Double {
+        fun getOdometer(): Double {
             val bArr = localRecievedData
             val parseDouble = java.lang.Double.toString(
                 BigInteger(
@@ -758,21 +758,21 @@ data class ClusterReceivedData(
             return parseDouble
         }
 
-        private fun getBarometric_pressure(): Int {
+        fun getBarometric_pressure(): Int {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![9], bArr[10])).toInt()
         }
 
-        private fun getRangeDTE(): Int {
+        fun getRangeDTE(): Int {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![11], bArr[12])).toInt()
         }
 
-        private fun getBatteryVoltageFrame5HV(): Double {
+        fun getBatteryVoltageFrame5HV(): Double {
             return (localRecievedData!![11].toInt() and 255).toDouble()
         }
 
-        private fun getRideMode(): Int {
+        fun getRideMode(): Int {
             var rideMode = getRideMode(localRecievedData!![17])
             if (rideMode > 3) {
                 rideMode = f51931K
@@ -823,28 +823,28 @@ data class ClusterReceivedData(
             return m11725a(localRecievedData!![2].toInt() and 255, 5)
         }
 
-        private fun getChecksum(): Int {
+        fun getChecksum(): Int {
             return localRecievedData!![18].toInt() and 255
         }
 
-        private fun getSideStandStatus(): Int {
+        fun getSideStandStatus(): Int {
             return m11725a(localRecievedData!![3].toInt() and 255, 7)
         }
 
-        private fun getClutchSwitchStatus(): Int {
+        fun getClutchSwitchStatus(): Int {
             return m11725a(localRecievedData!![3].toInt() and 255, 1)
         }
 
-        private fun getSideStandTellTaleStatus(): Int {
+        fun getSideStandTellTaleStatus(): Int {
             return m11725a(localRecievedData!![15].toInt() and 255, 5)
         }
 
-        private fun getCruisingRange(): Double {
+        fun getCruisingRange(): Double {
             val bArr = localRecievedData
             return BigInteger(byteArrayOf(bArr!![3], bArr[4])).toDouble()
         }
 
-        private fun getSpeed(): Int {
+        fun getSpeed(): Int {
             val i: Int = localRecievedData!![2].toInt() and 255
             if (i > 0 && !f51944h) {
                 setRideStartTime(Date().getTime())
@@ -882,7 +882,7 @@ data class ClusterReceivedData(
             return localRecievedData!![7].toInt() and 255
         }
 
-        private fun getCurrentRideAverageSpeed(): Int {
+        fun getCurrentRideAverageSpeed(): Int {
             if (getSpeed() > 0) {
 
                 key_current_ride_avg_insta_speed = (intValue2 + getSpeed()) / intValue3
@@ -905,11 +905,11 @@ data class ClusterReceivedData(
             return key_current_ride_avg_insta_speed
         }
 
-        private fun getSwitchStatus(): Int {
+        fun getSwitchStatus(): Int {
             return localRecievedData!![11].toInt() and 255
         }
 
-        private fun getCurrentRideBestZeroTo100Time(): String? {
+        fun getCurrentRideBestZeroTo100Time(): String? {
             val d = f51951o
             if (d != -1.0 && d < this.d) {
                 this.d = d
@@ -929,11 +929,11 @@ data class ClusterReceivedData(
             return "-"
         }
 
-        private fun getTellLeftTaleStatus(): Int {
+        fun getTellLeftTaleStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 2)
         }
 
-        private fun getCurrentRideBestZeroTo60Time(): String? {
+        fun getCurrentRideBestZeroTo60Time(): String? {
             val d = f51955s
             if (d != -1.0 && d < parseDouble3) {
                 parseDouble3 = d
@@ -953,11 +953,11 @@ data class ClusterReceivedData(
             return "-"
         }
 
-        private fun getTellRightTaleStatus(): Int {
+        fun getTellRightTaleStatus(): Int {
             return m11725a(localRecievedData!![13].toInt() and 255, 3)
         }
 
-        private fun getCurrentZeroTo100Time(): Double {
+        fun getCurrentZeroTo100Time(): Double {
             if (getSpeed() <= 0) {
                 f51962z = -1.0
                 f51952p = Date().getTime()
@@ -973,7 +973,7 @@ data class ClusterReceivedData(
             return f51951o
         }
 
-        private fun getTellTaleStatus(): Int {
+        fun getTellTaleStatus(): Int {
             return localRecievedData!![13].toInt() and 255
         }
 

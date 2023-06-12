@@ -6,9 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.shubu.biketelemetery.bluetooth.ClusterReceivedData
+import com.shubu.biketelemetery.localdata.SaveData
 
 class BikeApp : Application() {
     companion object {
+        const val COLLECT_ALL_DATA = false
+
         private val clusterData: ClusterReceivedData = ClusterReceivedData()
         lateinit var applicationContext: Context
         var isConnected by mutableStateOf(false);
@@ -138,7 +141,7 @@ class BikeApp : Application() {
             return clusterData
         }
 
-        fun setClusterData(receivedClusterData: ClusterReceivedData): Unit {
+        fun setClusterDataFull(receivedClusterData: ClusterReceivedData): Unit {
             if (!receivedClusterData.connected)
             {
                 clusterData.connected = false;
@@ -268,6 +271,95 @@ class BikeApp : Application() {
             }
             updateLocalData()
         }
+
+        fun setClusterData(receivedClusterData: SaveData): Unit {
+            if (!receivedClusterData.connected)
+            {
+                clusterData.connected = false;
+                return;
+            }
+            val b = receivedClusterData.dataType
+            if (b == 22) {
+            } else if (b == 24) {
+                clusterData.barometricPressure = receivedClusterData.barometricPressure
+                clusterData.intakeAirTemperature = receivedClusterData.intakeAirTemperature
+                clusterData.engineTemperatureFrame = receivedClusterData.engineTemperatureFrame
+                clusterData.fuelInjectionTime = receivedClusterData.fuelInjectionTime
+                clusterData.batteryVoltageFrame = receivedClusterData.batteryVoltageFrame
+                clusterData.fuelInjectionVolume = receivedClusterData.fuelInjectionVolume
+            } else if (b != 25) {
+                when (b) {
+                    16 -> {
+                        clusterData.switchStatus = receivedClusterData.switchStatus
+                        clusterData.speed = receivedClusterData.speed
+                        clusterData.acceleration = receivedClusterData.acceleration
+                        clusterData.odometer = receivedClusterData.odometer
+                        clusterData.fuelLevelPercentage = receivedClusterData.fuelLevelPercentage
+                        clusterData.averageSpeed = receivedClusterData.averageSpeed
+                        clusterData.mileage = receivedClusterData.mileage
+                        clusterData.topSpeed = receivedClusterData.topSpeed
+                        clusterData.currentRideBestTopSpeed = receivedClusterData.currentRideBestTopSpeed
+                        clusterData.throttlePercentage = receivedClusterData.throttlePercentage
+                        clusterData.zeroTo60Time = receivedClusterData.zeroTo60Time
+                        clusterData.averageMileageDirect = receivedClusterData.averageMileageDirect
+                        clusterData.engineRPM = receivedClusterData.engineRPM
+                        clusterData.checksum = receivedClusterData.checksum
+                        clusterData.currentZeroTo60Time = receivedClusterData.currentZeroTo60Time
+                        clusterData.currentZeroTo100Time = receivedClusterData.currentZeroTo100Time
+                        clusterData.currentRideBestZeroTo60Time = receivedClusterData.currentRideBestZeroTo60Time
+                        clusterData.currentRideBestZeroTo100Time = receivedClusterData.currentRideBestZeroTo100Time
+                        clusterData.currentRideBestAcceleration = receivedClusterData.currentRideBestAcceleration
+                        clusterData.currentRideBestDeceleration = receivedClusterData.currentRideBestDeceleration
+                        clusterData.currentRideAverageSpeed = receivedClusterData.currentRideAverageSpeed
+                    }
+
+                    17 -> {
+                        clusterData.clutchSwitchStatus = receivedClusterData.clutchSwitchStatus
+                        clusterData.sideStandStatus = receivedClusterData.sideStandStatus
+                        clusterData.killSwitchStatus = receivedClusterData.killSwitchStatus
+                        clusterData.sideStandTellTaleStatus = receivedClusterData.sideStandTellTaleStatus
+                        clusterData.engineStartedStatus = receivedClusterData.engineStartedStatus
+                        clusterData.gearPosition = receivedClusterData.gearPosition
+                        clusterData.gearShiftIndication = receivedClusterData.gearShiftIndication
+                        clusterData.vehicleDiagnostics = receivedClusterData.vehicleDiagnostics
+                        clusterData.absNormal = receivedClusterData.absNormal
+                        clusterData.turnSignalLampStatus = receivedClusterData.turnSignalLampStatus
+                        clusterData.engineTemperature = receivedClusterData.engineTemperature
+                        clusterData.accumulatedFuelInjectionTime = receivedClusterData.accumulatedFuelInjectionTime
+                        clusterData.backlightIllumination = receivedClusterData.backlightIllumination
+                        clusterData.rideMode = receivedClusterData.rideMode
+                        clusterData.checksum2 = receivedClusterData.checksum2
+                        clusterData.vehicleModel = receivedClusterData.vehicleModel
+                        clusterData.tellTaleStatus = receivedClusterData.tellTaleStatus
+                        clusterData.neutralTaleStatus = receivedClusterData.neutralTaleStatus
+                        clusterData.tellLeftTaleStatus = receivedClusterData.tellLeftTaleStatus
+                        clusterData.tellRightTaleStatus = receivedClusterData.tellRightTaleStatus
+                        clusterData.highBeamTaleStatus = receivedClusterData.highBeamTaleStatus
+                        clusterData.lfiStatus = receivedClusterData.lfiStatus
+                        clusterData.emsMilStatus = receivedClusterData.emsMilStatus
+                        clusterData.absMilStatus = receivedClusterData.absMilStatus
+                        clusterData.vehicleState3 = receivedClusterData.vehicleState3
+                    }
+
+                    18 -> {
+                        clusterData.cruisingRange = receivedClusterData.cruisingRange
+                        clusterData.acceleraation2 = receivedClusterData.acceleraation2
+                        clusterData.checksum3 = receivedClusterData.checksum3
+                    }
+                }
+            } else {
+                clusterData.getTripADistance = receivedClusterData.getTripADistance
+                clusterData.tripAMileage = receivedClusterData.tripAMileage
+                clusterData.tripBDistance = receivedClusterData.tripBDistance
+                clusterData.tripBMileage = receivedClusterData.tripBMileage
+                clusterData.rangeDTE = receivedClusterData.rangeDTE
+                clusterData.tripAAverageSpeed = receivedClusterData.tripAAverageSpeed
+                clusterData.tripBAverageSpeed = receivedClusterData.tripBAverageSpeed
+                clusterData.distanceCovered = receivedClusterData.distanceCovered
+            }
+            updateLocalData()
+        }
+
 
         private fun updateLocalData() {
 //            isConnected = clusterData.connected
