@@ -2,9 +2,11 @@ package com.shubu.biketelemetery.localdata
 
 import android.content.Context.MODE_PRIVATE
 import android.icu.text.SimpleDateFormat
+import android.os.Environment
 import android.util.Log
 import com.shubu.biketelemetery.BikeApp
 import com.shubu.biketelemetery.bluetooth.ClusterReceivedData
+import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.util.Calendar
@@ -23,22 +25,26 @@ class SaveCurrentSession {
             var extension = ".csv"
             if(BikeApp.COLLECT_ALL_DATA)
             {
-                extension = ".txt"
+                extension = ".csv"
             }
-            fileOutputStream = BikeApp.applicationContext.openFileOutput(
-                SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.ENGLISH)
-                    .format(Calendar.getInstance().time)
-                        + extension,
-                MODE_PRIVATE
+            fileOutputStream = FileOutputStream(
+                File(Environment.getExternalStorageDirectory().path + "/Ronin/ride_logs/" +
+                    SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.ENGLISH)
+                        .format(Calendar.getInstance().time)
+                    + extension
+                )
             )
             outputStreamWriter = OutputStreamWriter(fileOutputStream)
             if(!BikeApp.COLLECT_ALL_DATA)
             {
                 outputStreamWriter.append(SaveData.getCSVHeader() + "," + "fuelInjectionVolumeDelta" + "\n")
+            } else
+            {
+                outputStreamWriter.append(SaveData.getCSVHeaderFull() + "," + "fuelInjectionVolumeDelta" + "\n")
             }
         }
         fun appendDataFull(data: ClusterReceivedData) {
-            outputStreamWriter.append(data.toString() + "\n")
+            outputStreamWriter.append(data.toString() + "," + BikeApp.fuelInjectionVolumeDelta.toString() + "\n")
             //Log.i("data written", data.toString())
         }
         fun appendDataSmall(data: SaveData) {

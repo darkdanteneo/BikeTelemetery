@@ -79,8 +79,9 @@ class BluetoothPermissions {
 
         fun checkPermissions() {
             val missingPermissions = getMissingPermissions(requiredPermissions)
-            if (missingPermissions.isNotEmpty()) {
+            if (false and missingPermissions.isNotEmpty()) {
                 MainActivity.instance.requestPermissions(missingPermissions, MainActivity.ACCESS_LOCATION_REQUEST)
+//                checkIfLocationIsNeeded()
             } else {
                 checkIfLocationIsNeeded()
             }

@@ -101,38 +101,16 @@ data class SaveData (
     }
 
     companion object {
-        fun getParsedData(recievedData: ByteArray?): SaveData {
-            ClusterReceivedData.setReceivedData(recievedData)
+        fun getParsedData(receivedData: ByteArray?): SaveData {
+            ClusterReceivedData.setReceivedData(receivedData)
             val receivedClusterData = SaveData()
-            if (recievedData!![0].toInt() == 90) {
+            if (receivedData!![0].toInt() == 90) {
                 receivedClusterData.connected = true
-                val b = recievedData[1]
+                val b = receivedData[1]
                 receivedClusterData.dataType = b.toInt()
-                if (b.toInt() == 22) {
-                    /* TODO
-                    setLapTrigger(getLapTrigger())
-                    setLapNumber(lapNumber)
-                    setBestLapTime(getBestLapTime())
-                    setBestLapNumber(getBestLapNumber())
-                    setLapNumberDirect(getLapNumberDirect())
-                    setLapTimeDirect(getLapTimeDirect())
-                    setCurrentRideTotalLaps(CurrentRideTotalLaps)
-                    setCurrentRideTotalLapTime(
-                        PreferenceUtils.getInstance(Utils.getAppContext())
-                            .getLongValue(KEYS.U399_PREF_KEYS.key_total_lap_time, 0L)
-                    )
-                    setCurrentRideFastestLapTime(
-                        PreferenceUtils.getInstance(Utils.getAppContext())
-                            .getLongValue(KEYS.U399_PREF_KEYS.key_fastest_lap, 0L)
-                    )
-                    setCurrentRideBestLapNumber(
-                        PreferenceUtils.getInstance(Utils.getAppContext())
-                            .getIntValue(KEYS.U399_PREF_KEYS.key_fastest_lap_number, 0)
-                    )
-                    setCurrentRideLastLapTime(CurrentRideLastLapTime)*/
-                } else if (b.toInt() == 24) {
+                if (b.toInt() == 24) {
                     receivedClusterData.barometricPressure =
-                        ClusterReceivedData.getBarometric_pressure()
+                        ClusterReceivedData.getBarometricPressure()
                     receivedClusterData.intakeAirTemperature =
                         ClusterReceivedData.getIntakeAirTemperatureFrame5()
                     receivedClusterData.engineTemperatureFrame =
@@ -169,7 +147,7 @@ data class SaveData (
                             receivedClusterData.zeroTo60Time =
                                 ClusterReceivedData.getZeroTo60Time()
                             receivedClusterData.averageMileageDirect =
-                                ClusterReceivedData.getAvgMilageDirect()
+                                ClusterReceivedData.getAvgMileageDirect()
                             receivedClusterData.engineRPM =
                                 ClusterReceivedData.getEngineRPM()
                             receivedClusterData.checksum =
@@ -251,7 +229,7 @@ data class SaveData (
                             receivedClusterData.cruisingRange =
                                 ClusterReceivedData.getCruisingRange()
                             receivedClusterData.acceleraation2 =
-                                ClusterReceivedData.getAcceleraation2()
+                                ClusterReceivedData.getAcceleration2()
                             receivedClusterData.checksum3 =
                                 ClusterReceivedData.getChecksum()
                         }
@@ -295,6 +273,31 @@ data class SaveData (
                     "rangeDTE" + "," + "tripAAverageSpeed" + "," + "tripBAverageSpeed" + "," + "distanceCovered" + "," +
                     "connected" + "," + "dataType" + "," + "barometricPressure" + "," + "intakeAirTemperature" + "," +
                     "engineTemperatureFrame" + "," + "fuelInjectionTime" + "," + "batteryVoltageFrame" + "," + "fuelInjectionVolume"
+        }
+        fun getCSVHeaderFull(): String
+        {
+            return "connected" + "," + "userId" + "," + "frameNo" + "," + "vehicleId" + "," + "vehicleSeries" + "," + "dataType" + "," +
+                    "manifoldAirPressure" + "," + "barometricPressure" + "," + "intakeAirTemperature" + "," + "engineTemperatureFrame" + "," +
+                    "fuelInjectionTime" + "," + "batteryVoltageFrame" + "," + "runTimeSinceEngineStart" + "," + "distanceTravelledSinceMILOn" + "," +
+                    "fuelInjectionVolume" + "," + "locationTagActive" + "," + "switchStatus" + "," + "voiceAssistInvoke" + "," + "speed" + "," +
+                    "acceleration" + "," + "odometer" + "," + "fuelLevelPercentage" + "," + "averageSpeed" + "," + "mileage" + "," + "topSpeed" + "," +
+                    "currentRideBestTopSpeed" + "," + "throttlePercentage" + "," + "zeroTo60Time" + "," + "tripFMeter" + "," + "averageMileageDirect" + "," +
+                    "engineRPM" + "," + "checksum" + "," + "callAcceptRejectStatus" + "," + "alertPositionBtnClick" + "," + "currentZeroTo60Time" + "," +
+                    "currentZeroTo100Time" + "," + "currentRideBestZeroTo60Time" + "," + "currentRideBestZeroTo100Time" + "," + "currentRideBestAcceleration" +
+                    "," + "currentRideBestDeceleration" + "," + "currentRideAverageSpeed" + "," + "currentRideAvgInstantMileage" + "," + "vehicleState1" + "," +
+                    "clutchSwitchStatus" + "," + "breakSwitchStatus" + "," + "electricStartSwitchStatus" + "," + "sideStandStatus" + "," +
+                    "engineSpeedSensorStatus" + "," + "gearPositionSensorStatus" + "," + "sideStandSensorStatus" + "," + "canCommunicationErrorStatus" + "," +
+                    "lowBatteryStatus" + "," + "killSwitchStatus" + "," + "esSwitchStatus" + "," + "sideStandTellTaleStatus" + "," + "generalWarningTellTaleStatus" +
+                    "," + "engineStartedStatus" + "," + "gearPosition" + "," + "gearShiftIndication" + "," + "serviceReminder" + "," + "vehicleState2" + "," +
+                    "speedometerSwVersion" + "," + "vehicleDiagnostics" + "," + "tpsErrorStatus" + "," + "engineTempSensorStatus" + "," + "vehicleSpeedRearSensorErrorStatus" +
+                    "," + "vehicleSpeedFrontSensorErrorStatus" + "," + "intakeAirTempSensorStatus" + "," + "milStatus" + "," + "isgNormal" + "," + "absNormal" + "," +
+                    "turnSignalLampStatus" + "," + "engineTemperature" + "," + "intakeAirTemperature2" + "," + "accumulatedFuelInjectionTime" + "," + "backlightIllumination" +
+                    "," + "rideMode" + "," + "checksum2" + "," + "fuelSensorFailure" + "," + "milBlinkCode" + "," + "vehicleModel" + "," + "vehicleModelName" + "," +
+                    "iSGMilBlinkCode" + "," + "tellTaleStatus" + "," + "neutralTaleStatus" + "," + "tellLeftTaleStatus" + "," + "tellRightTaleStatus" + "," +
+                    "highBeamTaleStatus" + "," + "lfiStatus" + "," + "emsMilStatus" + "," + "absMilStatus" + "," + "screenMatrix" + "," + "vehicleState3" + "," +
+                    "absMilBlinkCode" + "," + "leanAngleDegree" + "," + "cruisingRange" + "," + "wheelieAngleOffset" + "," + "acceleration2" + "," + "torque" + "," +
+                    "tripDistance" + "," + "tripTime" + "," + "tripMileage" + "," + "tripFuel" + "," + "checksum3" + "," + "getTripADistance" + "," + "tripAMileage" + "," +
+                    "tripBDistance" + "," + "tripBMileage" + "," + "rangeDTE" + "," + "tripAAverageSpeed" + "," + "tripBAverageSpeed" + "," + "distanceCovered"
         }
     }
 }

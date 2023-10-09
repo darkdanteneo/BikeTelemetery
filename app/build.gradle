@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "com.shubu.biketelemetery"
-        minSdk 33
-        targetSdk 33
+        minSdk 29
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 

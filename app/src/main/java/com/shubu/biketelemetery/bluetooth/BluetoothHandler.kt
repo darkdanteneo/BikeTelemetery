@@ -225,8 +225,6 @@ internal class BluetoothHandler private constructor(context: Context) {
         globalPeripheral?.getCharacteristic(secretUUID1, UUID.fromString("00005354-0000-1000-8000-00805F9B34FB"))?.let {
             globalPeripheral?.observe(it) { value ->
                 val decrypted = EncryptDecryptDataBTData.decryptData(value)
-                // Log.i("Update Notification", "measurement received")
-                // Log.i("Update Notification - pre cal measurement value", decrypted.toHex())
                 try {
                     if (BikeApp.COLLECT_ALL_DATA)
                     {
@@ -238,7 +236,6 @@ internal class BluetoothHandler private constructor(context: Context) {
                         val measurement = SaveData.getParsedData(decrypted)
                         dataChannel.trySend(measurement)
                     }
-
                 } catch (e: java.lang.Exception) {
                     Log.i("error in decoding data", e.toString())
                     Log.i("Failed input", decrypted.toHex())

@@ -5,6 +5,7 @@ import java.math.BigInteger
 import java.text.DecimalFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.pow
 
 data class ClusterReceivedData(
     // 24
@@ -51,7 +52,7 @@ data class ClusterReceivedData(
     var currentRideBestAcceleration: String? = "",
     var currentRideBestDeceleration: String? = "",
     var currentRideAverageSpeed: Int = -1,
-    var currentRideAvgInstaMileage: Int = -1,
+    var currentRideAvgInstantMileage: Int = -1,
 
     // 17
     var vehicleState1: Int = -1,
@@ -73,7 +74,7 @@ data class ClusterReceivedData(
     var gearShiftIndication: Int = -1,
     var serviceReminder: Int = -1,
     var vehicleState2: Int = -1,
-    var speedoSwVersion: Int = -1,
+    var speedometerSwVersion: Int = -1,
     var vehicleDiagnostics: Int = -1,
     var tpsErrorStatus: Int = -1,
     var engineTempSensorStatus: Int = -1,
@@ -111,7 +112,7 @@ data class ClusterReceivedData(
     var leanAngleDegree: Int = -1,
     var cruisingRange: Double = -1.0,
     var wheelieAngleOffset: Int = -1,
-    var acceleraation2: Double = -1.0,
+    var acceleration2: Double = -1.0,
     var torque: Int = -1,
     var tripDistance: Double = -1.0,
     var tripTime: String = "",
@@ -130,186 +131,194 @@ data class ClusterReceivedData(
     var distanceCovered: Double = -1.0
 )
 {
+    override fun toString(): String {
+        return connected.toString() + "," + userId.toString() + "," + frameNo.toString() + "," + vehicleId.toString() + "," + vehicleSeries.toString() + "," +
+                dataType.toString() + "," + manifoldAirPressure.toString() + "," + barometricPressure.toString() + "," + intakeAirTemperature.toString() + "," +
+                engineTemperatureFrame.toString() + "," + fuelInjectionTime.toString() + "," + batteryVoltageFrame.toString() + "," + runTimeSinceEngineStart.toString() + "," +
+                distanceTravelledSinceMILOn.toString() + "," + fuelInjectionVolume.toString() + "," + locationTagActive.toString() + "," + switchStatus.toString() + "," +
+                voiceAssistInvoke.toString() + "," + speed.toString() + "," + acceleration.toString() + "," + odometer.toString() + "," + fuelLevelPercentage.toString() + "," +
+                averageSpeed.toString() + "," + mileage.toString() + "," + topSpeed.toString() + "," + currentRideBestTopSpeed.toString() + "," + throttlePercentage.toString() + "," +
+                zeroTo60Time.toString() + "," + tripFMeter.toString() + "," + averageMileageDirect.toString() + "," + engineRPM.toString() + "," + checksum.toString() + "," +
+                callAcceptRejectStatus.toString() + "," + alertPositionBtnClick.toString() + "," + currentZeroTo60Time.toString() + "," + currentZeroTo100Time.toString() + "," +
+                currentRideBestZeroTo60Time.toString() + "," + currentRideBestZeroTo100Time.toString() + "," + currentRideBestAcceleration.toString() + "," +
+                currentRideBestDeceleration.toString() + "," + currentRideAverageSpeed.toString() + "," + currentRideAvgInstantMileage.toString() + "," +
+                vehicleState1.toString() + "," + clutchSwitchStatus.toString() + "," + breakSwitchStatus.toString() + "," + electricStartSwitchStatus.toString() + "," +
+                sideStandStatus.toString() + "," + engineSpeedSensorStatus.toString() + "," + gearPositionSensorStatus.toString() + "," + sideStandSensorStatus.toString() + "," +
+                canCommunicationErrorStatus.toString() + "," + lowBatteryStatus.toString() + "," + killSwitchStatus.toString() + "," + esSwitchStatus.toString() + "," +
+                sideStandTellTaleStatus.toString() + "," + generalWarningTellTaleStatus.toString() + "," + engineStartedStatus.toString() + "," + gearPosition.toString() + "," +
+                gearShiftIndication.toString() + "," + serviceReminder.toString() + "," + vehicleState2.toString() + "," + speedometerSwVersion.toString() + "," +
+                vehicleDiagnostics.toString() + "," + tpsErrorStatus.toString() + "," + engineTempSensorStatus.toString() + "," + vehicleSpeedRearSensorErrorStatus.toString() + "," +
+                vehicleSpeedFrontSensorErrorStatus.toString() + "," + intakeAirTempSensorStatus.toString() + "," + milStatus.toString() + "," + isgNormal.toString() + "," +
+                absNormal.toString() + "," + turnSignalLampStatus.toString() + "," + engineTemperature.toString() + "," + intakeAirTemperature2.toString() + "," +
+                accumulatedFuelInjectionTime.toString() + "," + backlightIllumination.toString() + "," + rideMode.toString() + "," + checksum2.toString() + "," +
+                fuelSensorFailure.toString() + "," + milBlinkCode.toString() + "," + vehicleModel.toString() + "," + vehicleModelName.toString() + "," + iSGMilBlinkCode.toString() + "," +
+                tellTaleStatus.toString() + "," + neutralTaleStatus.toString() + "," + tellLeftTaleStatus.toString() + "," + tellRightTaleStatus.toString() + "," +
+                highBeamTaleStatus.toString() + "," + lfiStatus.toString() + "," + emsMilStatus.toString() + "," + absMilStatus.toString() + "," + screenMatrix.toString() + "," +
+                vehicleState3.toString() + "," + absMilBlinkCode.toString() + "," + leanAngleDegree.toString() + "," + cruisingRange.toString() + "," + wheelieAngleOffset.toString() + "," +
+                acceleration2.toString() + "," + torque.toString() + "," + tripDistance.toString() + "," + tripTime.toString() + "," + tripMileage.toString() + "," +
+                tripFuel.toString() + "," + checksum3.toString() + "," + getTripADistance.toString() + "," + tripAMileage.toString() + "," + tripBDistance.toString() + "," +
+                tripBMileage.toString() + "," + rangeDTE.toString() + "," + tripAAverageSpeed.toString() + "," + tripBAverageSpeed.toString() + "," + distanceCovered.toString()
+    }
+
     companion object {
-        val U368_BT_DATA_KEY = "u368BluetoothData"
-        /*        private var lapNumber = i6
-                private var CurrentRideLastLapTime: Long = j
-                private var CurrentRideTotalLaps = i7
-                private var f51924D: Long = j2
-                private var f51925E: Long = j3
-                private var f51926F = i8*/
-        private var intValue2 = 0
-        private var intValue3 = 1
-        private var key_current_ride_avg_insta_speed = 0
-        private var localRecievedData: ByteArray? = null
-        //private val *: U368BluetoothDataModel?*/ = null
-        private var f51941e = 0.0
-        private var f51942f = 0.0
-        private var f51943g = 0f
-        private var f51946j = 0.0
-        private var f51947k: Long = 0
-        private var f51948l = 0
-        private var parseDouble = 0.0
-        private var parseDouble2 = 0.0
-        private var f51952p: Long = 0
-        private var d = 0.0
-        private var parseDouble3 = 0.0
-        private var f51956t: Long = 0
-        private var intValue = 0
+        private var averageSpeedCount = 1
+        private var currRideAvgSpeed = 0
+        private var localReceivedData: ByteArray? = null
+        private var rideOdometer = 0.0
+        private var odometer = 0.0
+        private var rawAcceleration = 0.0
+        private var local_time: Long = 0
+        private var local_speed = 0
+        private var currentRideBestAcceleration = 0.0
+        private var currentRidBestDeceleration = 0.0
+        private var currentRideBestZeroTo100Time = 0.0
+        private var currentRideBestZeroTo60Time = 0.0
+        private var start_time: Long = 0
+        private var currentRideTopSPeed = 0
         private var key_ride_mileage_sum = 0
         private var key_ride_mileage_count = 0
-        private var key_current_ride_avg_insta_mileage = 0
-        private var f51961y = 0.0
-        private var f51962z = 0.0
-        private var f51939c = false
-        private val f51940d = false
-        private var f51944h = false
-        private var f51945i: Long = 0
-        private var f51951o = -1.0
-        private var f51955s = -1.0
-        private var f51930J = 0
-        private var f51931K = 0
-        private val f51932L = false
-        private val f51933M = 0.0f
-        private var f51934N = 0.0
-        private var f51935O = 0.0
-        private var f51936P = false
-        val df2: DecimalFormat = DecimalFormat("#.##")
-        val f62114df = DecimalFormat("#.#")
-        fun reverseString(str: String): String {
+        private var key_current_ride_avg_instant_mileage = 0
+        private var zeroTo60Achieved = 0.0
+        private var zeroTo100Achieved = 0.0
+        private var isRideOnGoing = false
+        private var isRideOnGoing2 = false
+        private var currentZeroTo100Time = -1.0
+        private var currentZeroTo60Time = -1.0
+        private var mileage = 0
+        private var rideMode = 0
+        private var distanceCovered = 0.0
+        private var distanceCoveredLocal = 0.0
+        private var distanceCoveredStarted = false
+        private val df2: DecimalFormat = DecimalFormat("###.####")
+        private val decimalFormat3 = DecimalFormat("###.###")
+
+        private fun reverseString(str: String): String {
             var str2 = ""
             for (length in str.length - 1 downTo 0) {
-                str2 = str2 + str[length]
+                str2 += str[length]
             }
             return str2
         }
 
-        fun getCurrentZeroTo60Time(): Double {
-            if (getSpeed() <= 0) {
-                f51961y = -1.0
-                f51956t = Date().time
-                Log.d("U399Best60Logs", "0-60 init called")
-            }
-            if (f51961y == -1.0 && getSpeed() >= 60) {
-                val time: Long = Date().getTime() - f51956t
-                f51955s = time.toDouble()
-                f51955s = java.lang.Double.valueOf(df2.format(time / 1000.0)).toDouble()
-                Log.d("U399Best60Logs", "0-60 time is: " + f51955s)
-                f51961y = 0.0
-            }
-            return f51955s
-        }
-
         fun getThrottlePercentage(): Int {
-            return (localRecievedData!![10].toInt() and 255) / 2
+            return (localReceivedData!![10].toInt() and 255) / 2
         }
 
         private fun getEngineTempRaw(str: String): Int {
             val reverseString: String =
                 reverseString(str.uppercase(Locale.getDefault()).trim { it <= ' ' })
             var i = 0
-            for (i2 in 0 until reverseString.length) {
-                i = (i + Math.pow(
-                    16.0,
-                    i2.toDouble()
-                ) * "0123456789ABCDEF".indexOf(reverseString[i2])).toInt()
+            for (i2 in reverseString.indices) {
+                i = (i + 16.0.pow(i2.toDouble()) * "0123456789ABCDEF".indexOf(reverseString[i2])).toInt()
             }
             return i
         }
 
         fun getTopSpeed(): Int {
-            return localRecievedData!![9].toInt() and 255
+            return localReceivedData!![9].toInt() and 255
         }
 
         private fun getAccelerationRaw(): Double {
-            if (f51948l == 0) {
-                f51948l = getSpeed()
+            val speed = getSpeed()
+            if(local_time == 0L)
+            {
+                local_time = System.currentTimeMillis()
+                local_speed = 0
             }
-            if (f51947k == 0L) {
-                f51947k = System.currentTimeMillis()
-            } else {
-                val decimalFormat: DecimalFormat = f62114df
-                m11722b(
-                    decimalFormat.format(getSpeed() / 3.6).toDouble(),
-                    decimalFormat.format(f51948l).toDouble(),
-                    System.currentTimeMillis(),
-                    f51947k
+            if (speed == local_speed) {
+                rawAcceleration = 0.0
+                return rawAcceleration
+            }
+            else {
+                val time = System.currentTimeMillis()
+                computeRawAcceleration(
+                    decimalFormat3.format(speed).toDouble(),
+                    decimalFormat3.format(local_speed).toDouble(),
+                    time,
+                    local_time
                 )
+                local_speed = speed
+                local_time = time
             }
-            return f51946j
+            return rawAcceleration
+        }
+
+        private fun computeRawAcceleration(speed: Double, localSpeed: Double, time: Long, localTime: Long) {
+            val deltaTime = ((time - localTime) / 10000).toDouble()
+            val deltaAcceleration = (speed - localSpeed) / (deltaTime * 3.6)
+            rawAcceleration = deltaAcceleration
         }
 
         private fun getTorque(): Int {
-            return localRecievedData!![7].toInt() and 255
+            return localReceivedData!![7].toInt() and 255
         }
 
         private fun getDistanceTravelledSinceMILOn(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![14], bArr[15])).toDouble()
         }
 
         private fun getTpsErrorStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 1)
+            return getStatus(localReceivedData!![10].toInt() and 255, 1)
         }
 
         private fun getElectricStartSwitchStatus(): Int {
-            return m11725a(localRecievedData!![3].toInt() and 255, 5)
+            return getStatus(localReceivedData!![3].toInt() and 255, 5)
         }
 
         fun getTripAAverageSpeed(): Int {
-            return localRecievedData!![13].toInt() and 255
+            return localReceivedData!![13].toInt() and 255
         }
 
         fun getEmsMilStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 5)
+            return getStatus(localReceivedData!![13].toInt() and 255, 5)
         }
 
         fun getTripADistance(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![5], bArr[6])).toDouble() / 10.0
         }
 
         fun getEngineRPM(): Double {
-            val bArr = localRecievedData
-            return java.lang.Double.toString(BigInteger(byteArrayOf(bArr!![16], bArr[17])).toDouble())
-                .toDouble()
+            val bArr = localReceivedData
+            return BigInteger(byteArrayOf(bArr!![16], bArr[17])).toDouble()
         }
 
         fun getTripAMileage(): Int {
-            return localRecievedData!![7].toInt() and 255
+            return localReceivedData!![7].toInt() and 255
         }
 
         private fun getEngineSpeedSensorStatus(): Int {
-            return m11725a(localRecievedData!![2].toInt() and 255, 3)
+            return getStatus(localReceivedData!![2].toInt() and 255, 3)
         }
 
         fun getTripBAverageSpeed(): Int {
-            return localRecievedData!![14].toInt() and 255
+            return localReceivedData!![14].toInt() and 255
         }
 
         fun getEngineStartedStatus(): Int {
-            return m11725a(localRecievedData!![15].toInt() and 255, 7)
+            return getStatus(localReceivedData!![15].toInt() and 255, 7)
         }
 
         fun getTripBDistance(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![8], bArr[9])).toDouble()
         }
 
         private fun getEngineTempSensorStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 3)
+            return getStatus(localReceivedData!![10].toInt() and 255, 3)
         }
 
         fun getTripBMileage(): Int {
-            return localRecievedData!![10].toInt() and 255
+            return localReceivedData!![10].toInt() and 255
         }
 
         fun setEngineTemperatureFrame5(): Int {
-            return (localRecievedData!![8].toInt() and 255) - 40
+            return (localReceivedData!![8].toInt() and 255) - 40
         }
 
         private fun getTripDistanceHM(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![8], bArr[9])).toDouble()
         }
 
@@ -317,548 +326,368 @@ data class ClusterReceivedData(
             return getEngineTempRaw(
                 String.format(
                     "%02x",
-                    java.lang.Byte.valueOf(localRecievedData!![13])
+                    java.lang.Byte.valueOf(localReceivedData!![13])
                 )
             ) - 25
         }
 
         fun getDistanceCovered(): Double {
-            if (getTripADistance() >= 0.0 && getTripADistance() < f51934N || !f51936P) {
-                f51934N = getTripADistance()
+            if (getTripADistance() >= 0.0 && getTripADistance() < distanceCovered || !distanceCoveredStarted) {
+                distanceCovered = getTripADistance()
             }
-            if (!f51936P) {
-                f51936P = true
+            if (!distanceCoveredStarted) {
+                distanceCoveredStarted = true
             }
-            f51935O += getTripADistance() - f51934N
-            f51934N = getTripADistance()
-            return f51935O
+            distanceCoveredLocal += getTripADistance() - distanceCovered
+            distanceCovered = getTripADistance()
+            return distanceCoveredLocal
         }
 
         private fun getEsSwitchStatus(): Int {
-            return m11725a(localRecievedData!![6].toInt() and 255, 6)
+            return getStatus(localReceivedData!![6].toInt() and 255, 6)
         }
 
-        private fun getTripFMeter(): String? {
-            val bArr = localRecievedData
+        private fun getTripFMeter(): String {
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![13], bArr[14], bArr[15])).toString()
         }
 
-        private fun getLanguageSomething(i: Int): String {
-            return String.format(Locale.getDefault(), "%02d", Integer.valueOf(i))
-        }
-
         private fun getTripFuel(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![13], bArr[14])).toDouble()
         }
 
         fun getFuelInjectionTime(): Float {
-            val bArr = localRecievedData
-            return (BigInteger(byteArrayOf(bArr!![9], bArr[10])).divide(BigInteger.valueOf(100L))
+            val bArr = localReceivedData
+            return ((BigInteger(byteArrayOf(bArr!![9], bArr[10])).divide(BigInteger.valueOf(100L)))
                 .toFloat() * 0.001).toFloat()
         }
 
         private fun getTripMileage(): Int {
-            return localRecievedData!![12].toInt() and 255
+            return localReceivedData!![12].toInt() and 255
         }
 
         fun getFuelInjectionVolume(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return (bArr!![17].toInt() and 255 or (bArr[16].toInt() and 255 shl 8)).toDouble()
         }
 
         private fun getTripTime(): String {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return (bArr!![10].toInt() and 255).toString() + ":" + (bArr[11].toInt() and 255)
         }
 
         fun getFuelLevelPercentage(): Int {
-            return localRecievedData!![6].toInt() and 255
+            return localReceivedData!![6].toInt() and 255
         }
 
         fun getTurnSignalLampStatus(): Int {
-            val i: Int = localRecievedData!![13].toInt() and 255
-            val m11725a = m11725a(i, 2)
-            val m11725a2 = m11725a(i, 3)
-            val i2 = if (m11725a2 != 1) if (m11725a == 1) 1 else 0 else 2
-            return if (m11725a == 1 && m11725a2 == 1) {
+            val i: Int = localReceivedData!![13].toInt() and 255
+            val leftTurnStatus = getStatus(i, 2)
+            val rightTurnStatus = getStatus(i, 3)
+            val i2 = if (rightTurnStatus != 1) if (leftTurnStatus == 1) 1 else 0 else 2
+            return if (leftTurnStatus == 1 && rightTurnStatus == 1) {
                 3
             } else i2
         }
 
         private fun getFuelSensorFailure(): Int {
-            return localRecievedData!![2].toInt() and 255
+            return localReceivedData!![2].toInt() and 255
         }
 
         fun getVehicleDiagnostics(): Int {
-            return localRecievedData!![10].toInt() and 255
+            return localReceivedData!![10].toInt() and 255
         }
 
         fun getGearPosition(): Int {
             return try {
-                String.format("%02X", Integer.valueOf(localRecievedData!![5].toInt() and 255))[1].toString().toInt()
+                String.format("%02X", Integer.valueOf(localReceivedData!![5].toInt() and 255))[1].toString().toInt()
             } catch (unused: Exception) {
-                0
+                -1
             }
         }
 
         private fun getVehicleSpeedFrontSensorErrorStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 4)
+            return getStatus(localReceivedData!![10].toInt() and 255, 4)
         }
 
         private fun getGearPositionSensorStatus(): Int {
-            return m11725a(localRecievedData!![2].toInt() and 255, 4)
+            return getStatus(localReceivedData!![2].toInt() and 255, 4)
         }
 
         private fun getVehicleSpeedRearSensorErrorStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 2)
+            return getStatus(localReceivedData!![10].toInt() and 255, 2)
         }
 
         private fun getGeneralWarningTellTaleStatus(): Int {
-            return m11725a(localRecievedData!![15].toInt() and 255, 6)
+            return getStatus(localReceivedData!![15].toInt() and 255, 6)
         }
 
         private fun getVehicleState1(): Int {
-            return localRecievedData!![3].toInt() and 255
-        }
-
-        fun getHighBeamTaleStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 4)
+            return localReceivedData!![3].toInt() and 255
         }
 
         private fun getVehicleState2(): Int {
-            return localRecievedData!![6].toInt() and 255
-        }
-
-        private fun getIntakeAirTempSensorStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 5)
+            return localReceivedData!![6].toInt() and 255
         }
 
         fun getVehicleState3(): Int {
-            return localRecievedData!![15].toInt() and 255
+            return localReceivedData!![15].toInt() and 255
+        }
+
+        fun getHighBeamTaleStatus(): Int {
+            return getStatus(localReceivedData!![13].toInt() and 255, 4)
+        }
+
+        private fun getIntakeAirTempSensorStatus(): Int {
+            return getStatus(localReceivedData!![10].toInt() and 255, 5)
         }
 
         private fun getIntakeAirTemperature(): Int {
-            return localRecievedData!![14].toInt() and 255
+            return localReceivedData!![14].toInt() and 255
         }
 
         private fun getVoiceAssistInvoke(): Boolean {
-            return localRecievedData!![11].toInt() and 4 === 4
+            return localReceivedData!![11].toInt() and 4 == 4
         }
 
         fun getIntakeAirTemperatureFrame5(): Int {
-            return (localRecievedData!![7].toInt() and 255) - 40
+            return (localReceivedData!![7].toInt() and 255) - 40
         }
 
         private fun getWheelieAngleOffset(): Int {
-            return localRecievedData!![5].toInt() and 255
+            return localReceivedData!![5].toInt() and 255
         }
 
         private fun getIsgNormal(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 7)
+            return getStatus(localReceivedData!![10].toInt() and 255, 7)
         }
 
         fun getZeroTo60Time(): Double {
-            return java.lang.Double.valueOf(df2.format((localRecievedData!![12].toInt() and 255) / 10.0))
-                .toDouble()
+            return df2.format((localReceivedData!![12].toInt() and 255) / 10.0).toDouble()
         }
 
-        private fun m11725a(i: Int, i2: Int): Int {
+        private fun getStatus(i: Int, i2: Int): Int {
             String.format("%8s", Integer.toBinaryString(i and 255)).replace(' ', '0')
             return i shr i2 - 1 and 1
         }
 
         fun getKillSwitchStatus(): Int {
-            return m11725a(localRecievedData!![6].toInt() and 255, 1)
+            return getStatus(localReceivedData!![6].toInt() and 255, 1)
         }
 
         private fun getAlertPositiveBtnClick(): Int {
-            return localRecievedData!![11].toInt() and 255
-        }
-
-        private fun m11722b(d: Double, d2: Double, j: Long, j2: Long) {
-            if (d2 != d) {
-                f51947k = System.currentTimeMillis()
-                val d3 = ((j - j2).toFloat() / 1000.0f).toDouble()
-                val d4 = (d - d2) / d3
-                val i = if (d4 > 0.0) 1 else if (d4 == 0.0) 0 else -1
-                if (i == 0 || d3 <= 0.0) {
-                    return
-                }
-                if (d4 < 0.0 && f51946j > d4 && d4 > -1.0) {
-                    f51946j = d4
-                } else if (i <= 0 || f51946j >= d4 || d4 >= 3.0) {
-                } else {
-                    f51946j = d4
-                }
-            }
-        }
-
-        private fun getLapNumberDirect(): Int {
-            return localRecievedData!![5].toInt()
+            return localReceivedData!![11].toInt() and 255
         }
 
         private fun getLocationTagActive(): Boolean {
-            return localRecievedData!![11].toInt() and 128 === 128
+            return localReceivedData!![11].toInt() and 128 == 128
         }
-
-        private fun crashAlertSomething() {
-            /* TODO
-            if (recievedData!![11].toInt() and 255 === 5) {
-                BroadcastUtils.getInstance().broadcastByAction(
-                    TVSApplication.getInstance().getApplicationContext(),
-                    BluetoothUtil.ACTION_CANCEL_CRASH_ALERT
-                )
-                TVSApplication.getInstance().setCancelCrashAlert(true)
-            }*/
-        }
-
-
-        /*private fun getLapTimeDirect(): String? {
-                val bArr = recievedData
-                val b = bArr!![2]
-                val b2 = bArr[3]
-                val b3 = bArr[4]
-                return getLanguageSomething(b.toInt()) + ":" + getLanguageSomething(b2.toInt()) + ":" + getLanguageSomething(
-                    b3.toInt()
-                )
-            }*/
 
         private fun getCallAcceptRejectStatus(): Int {
-            val b = localRecievedData!![11]
-            /* TODO
-            Utils.saveU399CallStatusLog("Call Status value: " + b.toInt().toString())
-            Utils.controlU368PhoneCall(b)*/
+            val b = localReceivedData!![11]
+            /* TODO*/
             return b.toInt()
         }
 
         private fun getAbsMilBlinkCode(): Int {
-            return localRecievedData!![16].toInt() and 255
+            return localReceivedData!![16].toInt() and 255
         }
 
-        /*private fun getLapTrigger(): Int {
-            val b = recievedData!![10]
-            m11708f1(b.toInt())
-            return b.toInt()
-        }*/
-
         fun getCurrentRideBestTopSpeed(): Int {
-            if (getSpeed() > intValue) {
-                intValue = getSpeed()
+            if (getSpeed() > currentRideTopSPeed) {
+                currentRideTopSPeed = getSpeed()
             }
-            return intValue
+            return currentRideTopSPeed
         }
 
         fun getAbsMilStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 6)
+            return getStatus(localReceivedData!![13].toInt() and 255, 6)
         }
 
         private fun getLeanAngleDegree(): Int {
-            return localRecievedData!![2].toInt() and 255
+            return localReceivedData!![2].toInt() and 255
         }
 
-        /*private fun m11711e1(j: Long, i: Int) {
-            val j2 = f51925E
-            if (j < j2) {
-                if (i > 2) {
-                    CurrentRideLastLapTime = j2 - j
-                }
-                f51925E = j
-                f51926F = i - 1
-                Utils.saveLocationTagAndLapLog("current ride fastest lap time " + f51925E)
-                Utils.saveLocationTagAndLapLog("current ride fastest lap number " + f51926F)
-                return
-            }
-            if (lapNumber > 2) {
-                CurrentRideLastLapTime = j2 - j
-            }
-            Utils.saveLocationTagAndLapLog("current ride last lap time " + CurrentRideLastLapTime)
-        }*/
-
         fun getAbsNormal(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 8)
+            return getStatus(localReceivedData!![10].toInt() and 255, 8)
         }
 
         fun getLfiStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 8)
+            return getStatus(localReceivedData!![13].toInt() and 255, 8)
         }
 
-        /*private fun m11708f1(i: Int) {
-            if (i != 1) {
-                if (i == 2) {
-                    KEYS.isLapResetTriggered = true
-                    f51943g = 0.0f
-                    Utils.clearLapDataHandlerInstance()
-                    CurrentRideTotalLaps--
-                    return
-                }
-                return
-            }
-            KEYS.isLapTriggered = true
-            KEYS.isNewLapStarted = true
-            f51943g = f51942f.toFloat()
-            Log.e("LapData", "lap start odo reading " + f51943g)
-            val i2 = lapNumber
-            if (i2 == 0) {
-                PreferenceUtils.getInstance(Utils.getAppContext())
-                    .setValue(KEYS.U399_PREF_KEYS.key_prev_lap_time, 0L)
-                KEYS.isLapResetTriggered = false
-                lapNumber = 1
-                CurrentRideTotalLaps = 1
-                f51926F = 1
-                m11705g1()
-                return
-            }
-            if (!KEYS.isLapResetTriggered) {
-                lapNumber = i2 + 1
-            }
-            val longValue: Long = PreferenceUtils.getInstance(Utils.getAppContext())
-                .getLongValue(KEYS.U399_PREF_KEYS.key_current_ride_lap_time, 0L)
-            PreferenceUtils.getInstance(Utils.getAppContext())
-                .setValue(KEYS.U399_PREF_KEYS.key_current_ride_completed_lap_time, longValue)
-            val i3 = lapNumber
-            if (i3 == 2) {
-                f51925E = longValue
-            }
-            if (!KEYS.isLapResetTriggered) {
-                m11711e1(longValue, i3)
-            }
-            CurrentRideTotalLaps++
-            m11696j1(longValue)
-            m11705g1()
-        }*/
-
         fun getAcceleration(): Double {
-            return f62114df.format(getAccelerationRaw()).toDouble()
+            return decimalFormat3.format(getAccelerationRaw()).toDouble()
         }
 
         private fun getLowBatteryStatus(): Int {
-            return m11725a(localRecievedData!![2].toInt() and 255, 7)
+            return getStatus(localReceivedData!![2].toInt() and 255, 7)
         }
 
-        /*private fun m11705g1() {
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_lap_number,
-                lapNumber
-            )
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_last_lap,
-                CurrentRideLastLapTime
-            )
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_fastest_lap,
-                f51925E
-            )
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_fastest_lap_number,
-                f51926F
-            )
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_total_laps,
-                CurrentRideTotalLaps
-            )
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_total_lap_time,
-                f51924D
-            )
-            Utils.saveLocationTagAndLapLog("current ride lap number " + lapNumber)
-        }*/
 
-        fun getIllumination(b: Byte): Int {
+        private fun getIllumination(b: Byte): Int {
             return b.toInt() and 240 shr 4
         }
 
-        fun getRideMode(b: Byte): Int {
+        private fun getRideMode(b: Byte): Int {
             return b.toInt() and 15
         }
 
-        fun getAcceleraation2(): Double {
-            return localRecievedData!![6].toDouble()
+        fun getAcceleration2(): Double {
+            return localReceivedData!![6].toDouble()
         }
 
-        private fun getManifold_air_pressure(): Int {
-            return localRecievedData!![5].toInt() and 255
+        private fun getManifoldAirPressure(): Int {
+            return localReceivedData!![5].toInt() and 255
         }
 
-        fun getCurrentRideBestAcceleration(d: Double): String? {
-            if (d >= 0.0 && d > parseDouble) {
-                parseDouble = d
+        fun getCurrentRideBestAcceleration(d: Double): String {
+            if (d >= 0.0 && d > currentRideBestAcceleration) {
+                currentRideBestAcceleration = d
             }
-            return parseDouble.toString() + " g"
+            return "$currentRideBestAcceleration g"
         }
 
         fun getAccumulatedFuelInjectionTime(): Float {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![15], bArr[16])).divide(BigInteger.valueOf(100L))
                 .toFloat()
         }
 
         private fun getMilStatus(): Int {
-            return m11725a(localRecievedData!![10].toInt() and 255, 6)
+            return getStatus(localReceivedData!![10].toInt() and 255, 6)
         }
 
-        fun getCurrentRideBestDeceleration(d: Double): String? {
-            if (d <= 0.0 && d < parseDouble2) {
-                parseDouble2 = d
+        fun getCurrentRideBestDeceleration(d: Double): String {
+            if (d <= 0.0 && d < currentRidBestDeceleration) {
+                currentRidBestDeceleration = d
             }
-            return parseDouble2.toString() + " g"
+            return "$currentRidBestDeceleration g"
         }
 
         fun getAverageSpeed(): Int {
-            return localRecievedData!![7].toInt() and 255
+            return localReceivedData!![7].toInt() and 255
         }
 
         fun getMileage(): Int {
             if (getSpeed() > 0) {
-                f51930J = localRecievedData!![8].toInt() and 255
+                mileage = localReceivedData!![8].toInt() and 255
             }
-            return f51930J
+            return mileage
         }
 
-        /*private fun m11696j1(j: Long) {
-            if (KEYS.isLapResetTriggered) {
-                KEYS.isLapResetTriggered = false
-            } else {
-                f51924D = j + f51924D
-            }
-            Utils.saveLocationTagAndLapLog("current ride total lap time " + f51924D)
-            PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                KEYS.U399_PREF_KEYS.key_total_lap_time,
-                f51924D
-            )
-        }*/
-
-        fun getAvgMilageDirect(): Int {
-            return localRecievedData!![13].toInt() and 255
+        fun getAvgMileageDirect(): Int {
+            return localReceivedData!![13].toInt() and 255
         }
 
         fun getNeutralTaleStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 1)
+            return getStatus(localReceivedData!![13].toInt() and 255, 1)
         }
 
         fun getBacklightIllumination(): Int {
-            return getIllumination(localRecievedData!![17])
+            return getIllumination(localReceivedData!![17])
         }
 
         fun getOdometer(): Double {
-            val bArr = localRecievedData
-            val parseDouble = java.lang.Double.toString(
-                BigInteger(
-                    byteArrayOf(
-                        bArr!![3], bArr[4], bArr[5]
-                    )
-                ).toDouble() / 10.0
-            ).toDouble()
-            f51942f = parseDouble
-            if (!f51939c) {
-                f51939c = true
-                f51941e = parseDouble
-                Log.d("U368 Data", "isRideStartOdometerRecorded: " + f51941e)
+            val bArr = localReceivedData
+            val odoValue = (BigInteger(byteArrayOf(bArr!![3], bArr[4], bArr[5])).toDouble() / 10.0)
+            odometer = odoValue
+            if (!isRideOnGoing) {
+                isRideOnGoing = true
+                rideOdometer = odoValue
             }
-            return parseDouble
+            return odoValue
         }
 
-        fun getBarometric_pressure(): Int {
-            val bArr = localRecievedData
+        fun getBarometricPressure(): Int {
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![9], bArr[10])).toInt()
         }
 
         fun getRangeDTE(): Int {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![11], bArr[12])).toInt()
         }
 
         fun getBatteryVoltageFrame5HV(): Double {
-            return (localRecievedData!![11].toInt() and 255).toDouble()
+            return (localReceivedData!![11].toInt() and 255).toDouble()
         }
 
         fun getRideMode(): Int {
-            var rideMode = getRideMode(localRecievedData!![17])
-            if (rideMode > 3) {
-                rideMode = f51931K
+            var mode = getRideMode(localReceivedData!![17])
+            if (mode > 3) {
+                mode = rideMode
             }
-            if (rideMode < 4) {
-                f51931K = rideMode
+            if (mode <= 3) {
+                rideMode = mode
             }
-            return rideMode
-        }
-
-        private fun getBestLapNumber(): Int {
-            return localRecievedData!![9].toInt()
+            return mode
         }
 
         private fun getRunTimeSinceEngineStart(): Float {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![12], bArr[13])).divide(BigInteger.valueOf(100L))
                 .toFloat()
         }
 
-        private fun getBestLapTime(): String? {
-            val bArr = localRecievedData
-            val b = bArr!![6]
-            val b2 = bArr[7]
-            val b3 = bArr[8]
-            return getLanguageSomething(b.toInt()) + ":" + getLanguageSomething(b2.toInt()) + ":" + getLanguageSomething(
-                b3.toInt()
-            )
-        }
 
         private fun getScreenMatrix(): Int {
-            return localRecievedData!![14].toInt() and 255
+            return localReceivedData!![14].toInt() and 255
         }
 
         private fun getBreakSwitchStatus(): Int {
-            return m11725a(localRecievedData!![3].toInt() and 255, 2)
+            return getStatus(localReceivedData!![3].toInt() and 255, 2)
         }
 
         private fun getServiceReminder(): Int {
-            return localRecievedData!![4].toInt() and 255
+            return localReceivedData!![4].toInt() and 255
         }
 
         private fun getCanCommunicationErrorStatus(): Int {
-            return m11725a(localRecievedData!![2].toInt() and 255, 6)
+            return getStatus(localReceivedData!![2].toInt() and 255, 6)
         }
 
         private fun getSideStandSensorStatus(): Int {
-            return m11725a(localRecievedData!![2].toInt() and 255, 5)
+            return getStatus(localReceivedData!![2].toInt() and 255, 5)
         }
 
         fun getChecksum(): Int {
-            return localRecievedData!![18].toInt() and 255
+            return localReceivedData!![18].toInt() and 255
         }
 
         fun getSideStandStatus(): Int {
-            return m11725a(localRecievedData!![3].toInt() and 255, 7)
+            return getStatus(localReceivedData!![3].toInt() and 255, 7)
         }
 
         fun getClutchSwitchStatus(): Int {
-            return m11725a(localRecievedData!![3].toInt() and 255, 1)
+            return getStatus(localReceivedData!![3].toInt() and 255, 1)
         }
 
         fun getSideStandTellTaleStatus(): Int {
-            return m11725a(localRecievedData!![15].toInt() and 255, 5)
+            return getStatus(localReceivedData!![15].toInt() and 255, 5)
         }
 
         fun getCruisingRange(): Double {
-            val bArr = localRecievedData
+            val bArr = localReceivedData
             return BigInteger(byteArrayOf(bArr!![3], bArr[4])).toDouble()
         }
 
         fun getSpeed(): Int {
-            val i: Int = localRecievedData!![2].toInt() and 255
-            if (i > 0 && !f51944h) {
-                setRideStartTime(Date().getTime())
-                f51944h = true
+            val i: Int = localReceivedData!![2].toInt() and 255
+            if (i > 0 && !isRideOnGoing2) {
+                setRideStartTime(Date().time)
+                isRideOnGoing2 = true
             }
             return i
         }
 
-        private fun getCurrentRideAvgInstaMileage(): Int {
+        private fun getCurrentRideAvgInstantMileage(): Int {
             val i: Int = key_ride_mileage_count
             if (getSpeed() > 0 && i > 0) {
                 val i2 = key_ride_mileage_sum
-                val i3 = f51930J
-                key_current_ride_avg_insta_mileage = (i2 + i3) / i
+                val i3 = mileage
+                key_current_ride_avg_instant_mileage = (i2 + i3) / i
                 key_ride_mileage_sum = i3 + i2
                 key_ride_mileage_count = i + 1
                 /* TODO
@@ -871,132 +700,116 @@ data class ClusterReceivedData(
                     f51958v
                 )
                 PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                    KEYS.U399_PREF_KEYS.key_current_ride_avg_insta_mileage,
+                    KEYS.U399_PREF_KEYS.key_current_ride_avg_instant_mileage,
                     f51960x
                 )*/
             }
-            return key_current_ride_avg_insta_mileage
+            return key_current_ride_avg_instant_mileage
         }
 
-        private fun getSpeedoSwVersion(): Int {
-            return localRecievedData!![7].toInt() and 255
+        private fun getSpeedometerSwVersion(): Int {
+            return localReceivedData!![7].toInt() and 255
         }
 
         fun getCurrentRideAverageSpeed(): Int {
             if (getSpeed() > 0) {
-
-                key_current_ride_avg_insta_speed = (intValue2 + getSpeed()) / intValue3
-                intValue2 += getSpeed()
-                intValue3++
-                /* TODO
-                PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                    KEYS.U399_PREF_KEYS.key_ride_count,
-                    f51928H
-                )
-                PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                    KEYS.U399_PREF_KEYS.key_ride_sum,
-                    f51927G
-                )
-                PreferenceUtils.getInstance(Utils.getAppContext()).setValue(
-                    KEYS.U399_PREF_KEYS.key_current_ride_avg_insta_speed,
-                    f51929I
-                )*/
+                currRideAvgSpeed = (((currRideAvgSpeed * averageSpeedCount) + getSpeed())
+                        / (averageSpeedCount+1))
+                averageSpeedCount++
             }
-            return key_current_ride_avg_insta_speed
+            return currRideAvgSpeed
         }
 
         fun getSwitchStatus(): Int {
-            return localRecievedData!![11].toInt() and 255
+            return localReceivedData!![11].toInt() and 255
         }
 
-        fun getCurrentRideBestZeroTo100Time(): String? {
-            val d = f51951o
-            if (d != -1.0 && d < this.d) {
-                this.d = d
+        fun getCurrentRideBestZeroTo100Time(): String {
+            val d = currentZeroTo100Time
+            if (d != -1.0 && d < this.currentRideBestZeroTo100Time) {
+                this.currentRideBestZeroTo100Time = d
             }
-            Log.d("U399Best60Logs", "Best 0-100 : " + this.d)
-            val d2 = this.d
+            val d2 = this.currentRideBestZeroTo100Time
             if (d2 != 999.0 && d2 != 0.0) {
-                /* TODO
-                val preferenceUtils: PreferenceUtils =
-                    PreferenceUtils.getInstance(Utils.getAppContext())
-                preferenceUtils.setValue(KEYS.U399_PREF_KEYS.key_best_100_speed, "" + f51953q)*/
-                return "" + this.d
+                return "" + this.currentRideBestZeroTo100Time
             }
-            /* TODO
-            PreferenceUtils.getInstance(Utils.getAppContext())
-                .setValue(KEYS.U399_PREF_KEYS.key_best_100_speed, "")*/
             return "-"
         }
 
         fun getTellLeftTaleStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 2)
+            return getStatus(localReceivedData!![13].toInt() and 255, 2)
         }
 
-        fun getCurrentRideBestZeroTo60Time(): String? {
-            val d = f51955s
-            if (d != -1.0 && d < parseDouble3) {
-                parseDouble3 = d
+        fun getCurrentRideBestZeroTo60Time(): String {
+            val d = currentZeroTo60Time
+            if (d != -1.0 && d < currentRideBestZeroTo60Time) {
+                currentRideBestZeroTo60Time = d
             }
-            Log.d("U399Best60Logs", "Best 0-60 : " + parseDouble3)
-            val d2 = parseDouble3
+            val d2 = currentRideBestZeroTo60Time
             if (d2 != 999.0 && d2 != 0.0) {
-                /* TODO
-                val preferenceUtils: PreferenceUtils =
-                    PreferenceUtils.getInstance(Utils.getAppContext())
-                preferenceUtils.setValue(KEYS.U399_PREF_KEYS.key_best_60_speed, "" + f51954r)*/
-                return "" + parseDouble3
+                return "" + currentRideBestZeroTo60Time
             }
-            /* TODO
-            PreferenceUtils.getInstance(Utils.getAppContext())
-                .setValue(KEYS.U399_PREF_KEYS.key_best_60_speed, "")*/
             return "-"
         }
 
         fun getTellRightTaleStatus(): Int {
-            return m11725a(localRecievedData!![13].toInt() and 255, 3)
+            return getStatus(localReceivedData!![13].toInt() and 255, 3)
+        }
+
+        fun getCurrentZeroTo60Time(): Double {
+            if (getSpeed() <= 0) {
+                zeroTo60Achieved = -1.0
+                start_time = Date().time
+                Log.d("U399Best60Logs", "0-60 init called")
+            }
+            if (zeroTo60Achieved == -1.0 && getSpeed() >= 60) {
+                val time: Long = Date().time - start_time
+                currentZeroTo60Time = time.toDouble()
+                currentZeroTo60Time = df2.format(time / 1000.0).toDouble()
+                zeroTo60Achieved = 0.0
+            }
+            return currentZeroTo60Time
         }
 
         fun getCurrentZeroTo100Time(): Double {
             if (getSpeed() <= 0) {
-                f51962z = -1.0
-                f51952p = Date().getTime()
+                zeroTo100Achieved = -1.0
+                start_time = Date().time
                 Log.d("U399Best60Logs", "0-100 init called")
             }
-            if (f51962z == -1.0 && getSpeed() >= 100) {
-                val time: Long = Date().getTime() - f51952p
-                f51951o = time.toDouble()
-                f51951o = java.lang.Double.valueOf(df2.format(time / 1000.0)).toDouble()
-                Log.d("U399Best60Logs", "0-100 time is: " + f51951o)
-                f51962z = 0.0
+            if (zeroTo100Achieved == -1.0 && getSpeed() >= 100) {
+                val time: Long = Date().time - start_time
+                currentZeroTo100Time = time.toDouble()
+                currentZeroTo100Time = df2.format(time / 1000.0).toDouble()
+                zeroTo100Achieved = 0.0
             }
-            return f51951o
+            return currentZeroTo100Time
         }
 
         fun getTellTaleStatus(): Int {
-            return localRecievedData!![13].toInt() and 255
+            return localReceivedData!![13].toInt() and 255
         }
 
         fun getGearShift(): Int {
-            return String.format("%02X", Integer.valueOf(localRecievedData!![5].toInt() and 15))[0].toString()
+            return String.format("%02X", Integer.valueOf(localReceivedData!![5].toInt() and 15))[0].toString()
                 .toInt()
         }
 
         fun getGearShiftIndication(): Int {
-            return localRecievedData!![5].toInt() and 255 and 240 shr 4
+            return localReceivedData!![5].toInt() and 255 and 240 shr 4
         }
 
-        fun getISGMilBlinkCode(): Int {
-            return localRecievedData!![11].toInt() and 255
+        private fun getISGMilBlinkCode(): Int {
+            return localReceivedData!![11].toInt() and 255
         }
 
-        fun getMilBlinkCode(): Int {
-            return localRecievedData!![8].toInt() and 255
+        private fun getMilBlinkCode(): Int {
+            return localReceivedData!![8].toInt() and 255
         }
 
-        fun getParsedData(recievedData: ByteArray?): ClusterReceivedData {
-            setReceivedData(recievedData)
-            var receivedClusterData = ClusterReceivedData(
+        fun getParsedData(receivedData: ByteArray?): ClusterReceivedData {
+            setReceivedData(receivedData)
+            val receivedClusterData = ClusterReceivedData(
                 connected = false,
                 userId = -1,
                 frameNo = -1,
@@ -1040,7 +853,7 @@ data class ClusterReceivedData(
                 currentRideBestAcceleration = "",
                 currentRideBestDeceleration = "",
                 currentRideAverageSpeed = -1,
-                currentRideAvgInstaMileage = -1,
+                currentRideAvgInstantMileage = -1,
 
                 // 17
                 vehicleState1 = -1,
@@ -1062,7 +875,7 @@ data class ClusterReceivedData(
                 gearShiftIndication = -1,
                 serviceReminder = -1,
                 vehicleState2 = -1,
-                speedoSwVersion = -1,
+                speedometerSwVersion = -1,
                 vehicleDiagnostics = -1,
                 tpsErrorStatus = -1,
                 engineTempSensorStatus = -1,
@@ -1100,7 +913,7 @@ data class ClusterReceivedData(
                 leanAngleDegree = -1,
                 cruisingRange = -1.0,
                 wheelieAngleOffset = -1,
-                acceleraation2 = -1.0,
+                acceleration2 = -1.0,
                 torque = -1,
                 tripDistance = -1.0,
                 tripTime = "",
@@ -1119,14 +932,14 @@ data class ClusterReceivedData(
                 distanceCovered = -1.0,
 
                 )
-            if (recievedData!![0].toInt() == 90) {
+            if (receivedData!![0].toInt() == 90) {
                 receivedClusterData.connected = true
                 receivedClusterData.userId = 123
                 receivedClusterData.frameNo = 123
                 receivedClusterData.vehicleId = 123
                 receivedClusterData.vehicleSeries = "APACHE"
 
-                val b = recievedData!![1]
+                val b = receivedData[1]
                 receivedClusterData.dataType = b.toInt()
                 if (b.toInt() == 22) {
                     /* TODO
@@ -1151,8 +964,8 @@ data class ClusterReceivedData(
                     )
                     setCurrentRideLastLapTime(CurrentRideLastLapTime)*/
                 } else if (b.toInt() == 24) {
-                    receivedClusterData.manifoldAirPressure = getManifold_air_pressure()
-                    receivedClusterData.barometricPressure = getBarometric_pressure()
+                    receivedClusterData.manifoldAirPressure = getManifoldAirPressure()
+                    receivedClusterData.barometricPressure = getBarometricPressure()
                     receivedClusterData.intakeAirTemperature = getIntakeAirTemperatureFrame5()
                     receivedClusterData.engineTemperatureFrame = setEngineTemperatureFrame5()
                     receivedClusterData.fuelInjectionTime = getFuelInjectionTime()
@@ -1177,7 +990,7 @@ data class ClusterReceivedData(
                             receivedClusterData.throttlePercentage = getThrottlePercentage()
                             receivedClusterData.zeroTo60Time = getZeroTo60Time()
                             receivedClusterData.tripFMeter = getTripFMeter()
-                            receivedClusterData.averageMileageDirect = getAvgMilageDirect()
+                            receivedClusterData.averageMileageDirect = getAvgMileageDirect()
                             receivedClusterData.engineRPM = getEngineRPM()
                             receivedClusterData.checksum = getChecksum()
                             receivedClusterData.callAcceptRejectStatus = getCallAcceptRejectStatus()
@@ -1189,7 +1002,7 @@ data class ClusterReceivedData(
                             receivedClusterData.currentRideBestAcceleration = getCurrentRideBestAcceleration(getAcceleration())
                             receivedClusterData.currentRideBestDeceleration = getCurrentRideBestDeceleration(getAcceleration())
                             receivedClusterData.currentRideAverageSpeed = getCurrentRideAverageSpeed()
-                            receivedClusterData.currentRideAvgInstaMileage = getCurrentRideAvgInstaMileage()
+                            receivedClusterData.currentRideAvgInstantMileage = getCurrentRideAvgInstantMileage()
 
                         }
 
@@ -1213,7 +1026,7 @@ data class ClusterReceivedData(
                             receivedClusterData.gearShiftIndication = getGearShiftIndication()
                             receivedClusterData.serviceReminder = getServiceReminder()
                             receivedClusterData.vehicleState2 = getVehicleState2()
-                            receivedClusterData.speedoSwVersion = getSpeedoSwVersion()
+                            receivedClusterData.speedometerSwVersion = getSpeedometerSwVersion()
                             receivedClusterData.vehicleDiagnostics = getVehicleDiagnostics()
                             receivedClusterData.tpsErrorStatus = getTpsErrorStatus()
                             receivedClusterData.engineTempSensorStatus = getEngineTempSensorStatus()
@@ -1252,7 +1065,7 @@ data class ClusterReceivedData(
                             receivedClusterData.leanAngleDegree = getLeanAngleDegree()
                             receivedClusterData.cruisingRange = getCruisingRange()
                             receivedClusterData.wheelieAngleOffset = getWheelieAngleOffset()
-                            receivedClusterData.acceleraation2 = getAcceleraation2()
+                            receivedClusterData.acceleration2 = getAcceleration2()
                             receivedClusterData.torque = getTorque()
                             receivedClusterData.tripDistance = getTripDistanceHM() / 10.0
                             receivedClusterData.tripTime = getTripTime()
@@ -1276,20 +1089,20 @@ data class ClusterReceivedData(
         }
 
         fun getVehicleModel(): Int {
-            return localRecievedData!![9].toInt() and 255
+            return localReceivedData!![9].toInt() and 255
         }
 
-        fun getVehicleModelName(): String? {
-            val i: Int = localRecievedData!![9].toInt() and 255
+        private fun getVehicleModelName(): String {
+            val i: Int = localReceivedData!![9].toInt() and 255
             return if (i != 10) if (i != 179) if (i != 196) if (i != 161) if (i != 162) "" else "EV" else "NTORQ" else "Apache" else "HEV" else "R&D vehicle"
         }
 
         fun setReceivedData(bArr: ByteArray?) {
-            localRecievedData = bArr
+            localReceivedData = bArr
         }
 
-        fun setRideStartTime(j: Long) {
-            f51945i = j
+        private fun setRideStartTime(j: Long) {
+            start_time = j
         }
     }
 }

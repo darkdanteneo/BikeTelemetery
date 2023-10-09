@@ -4,18 +4,31 @@ import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.shubu.biketelemetery.bluetooth.BluetoothPermissions
 import com.shubu.biketelemetery.ui.theme.BikeTelemeteryTheme
 
@@ -38,8 +51,8 @@ class MainActivity : ComponentActivity() {
                     GreetingPreview()
                 }
             }
-
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onResume() {
@@ -79,7 +92,14 @@ fun SimpleText(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    AllDataList(modifier = Modifier.fillMaxSize())
+    Column()
+    {
+        AllDataList(modifier = Modifier)
+        FuelConsumptionBar()
+        Spacer(modifier = Modifier.size(15.dp))
+        EngineTemperatureBar()
+    }
+
 }
 
 @Composable
@@ -118,6 +138,75 @@ fun AllDataList(modifier: Modifier) {
         SingleData(title = "Intake Air Temperature 2", data = BikeApp.intakeAirTemperature2.toString(), modifier = modifier)
         SingleData(title = "Current Best top speed", data = BikeApp.currentRideBestTopSpeed.toString(), modifier = modifier)
         SingleData(title = "Current Best 0 to 60", data = BikeApp.currentRideBestZeroTo60Time, modifier = modifier)
-        SingleData(title = "Wheelie Angle", data = BikeApp.wheelieAngleOffset.toString(), modifier = modifier)
+        SingleData(title = "Fuel Consumption delta", data = BikeApp.fuelInjectionVolumeDelta.toString(), modifier = modifier)
+    }
+}
+
+
+@Composable
+fun FuelConsumptionBar() {
+    var value = (BikeApp.fuelInjectionVolumeDelta.toInt() / 30).coerceAtLeast(0).coerceAtMost(100);
+    var colorEnd = Color(0xffFD7D20);
+    var colorStart = Color(0xffFBE41A);
+    if(value == 0)
+    {
+        colorStart = Color(0xff3f911c)
+        colorEnd = Color(0xffa2cf27)
+        value = 100
+    }
+    CustomProgressBar(
+        Modifier
+            .clip(shape = RoundedCornerShape(10))
+            .height(14.dp),
+        400.dp,
+        Color.Gray,
+        Brush.horizontalGradient(listOf(colorStart, colorEnd)),
+        value,
+        true
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EngineTemperatureBar()
+{
+    val value = (BikeApp.engineTemperatureFrame).coerceAtLeast(0).coerceAtMost(150);
+    val colorEnd = Color(0xffcc0e0e);
+    val colorStart = Color(0xff4acc0e);
+    Box()
+    {
+        CustomProgressBar(
+            Modifier
+                .clip(shape = RoundedCornerShape(10))
+                .height(14.dp),
+            400.dp,
+            Color.Gray,
+            Brush.horizontalGradient(listOf(colorStart, colorEnd)),
+            value * 2 / 3,
+            false
+        )
+        Text(text = value.toString(), modifier = Modifier.height(14.dp), color = Color(0xff500ecc))
+    }
+}
+
+@Composable
+fun CustomProgressBar(
+    modifier: Modifier,
+    width: Dp,
+    backgroundColor: Color,
+    foregroundColor: Brush,
+    percent: Int,
+    isShownText: Boolean
+) {
+    Box(
+        modifier = modifier
+            .background(backgroundColor)
+            .width(width)
+    ) {
+        Box(
+            modifier = modifier
+                .background(foregroundColor)
+                .width(width * percent / 100)
+        )
     }
 }

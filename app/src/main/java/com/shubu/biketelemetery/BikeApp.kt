@@ -16,7 +16,7 @@ class BikeApp : Application() {
         lateinit var applicationContext: Context
         var isConnected by mutableStateOf(false);
         var btMAC: String = ""
-        var fuelInjectionVolumeDelta = 0.0;
+        var fuelInjectionVolumeDelta by mutableStateOf(0.0);
 
         var dataType by mutableStateOf(-1)
         var userId by mutableStateOf(-1)
@@ -190,7 +190,7 @@ class BikeApp : Application() {
                         clusterData.currentRideBestAcceleration = receivedClusterData.currentRideBestAcceleration
                         clusterData.currentRideBestDeceleration = receivedClusterData.currentRideBestDeceleration
                         clusterData.currentRideAverageSpeed = receivedClusterData.currentRideAverageSpeed
-                        clusterData.currentRideAvgInstaMileage = receivedClusterData.currentRideAvgInstaMileage
+                        clusterData.currentRideAvgInstantMileage = receivedClusterData.currentRideAvgInstantMileage
                     }
 
                     17 -> {
@@ -213,7 +213,7 @@ class BikeApp : Application() {
                         clusterData.gearShiftIndication = receivedClusterData.gearShiftIndication
                         clusterData.serviceReminder = receivedClusterData.serviceReminder
                         clusterData.vehicleState2 = receivedClusterData.vehicleState2
-                        clusterData.speedoSwVersion = receivedClusterData.speedoSwVersion
+                        clusterData.speedometerSwVersion = receivedClusterData.speedometerSwVersion
                         clusterData.vehicleDiagnostics = receivedClusterData.vehicleDiagnostics
                         clusterData.tpsErrorStatus = receivedClusterData.tpsErrorStatus
                         clusterData.engineTempSensorStatus = receivedClusterData.engineTempSensorStatus
@@ -252,7 +252,7 @@ class BikeApp : Application() {
                         clusterData.leanAngleDegree = receivedClusterData.leanAngleDegree
                         clusterData.cruisingRange = receivedClusterData.cruisingRange
                         clusterData.wheelieAngleOffset = receivedClusterData.wheelieAngleOffset
-                        clusterData.acceleraation2 = receivedClusterData.acceleraation2
+                        clusterData.acceleration2 = receivedClusterData.acceleration2
                         clusterData.torque = receivedClusterData.torque
                         clusterData.tripDistance = receivedClusterData.tripDistance
                         clusterData.tripTime = receivedClusterData.tripTime
@@ -346,7 +346,7 @@ class BikeApp : Application() {
 
                     18 -> {
                         clusterData.cruisingRange = receivedClusterData.cruisingRange
-                        clusterData.acceleraation2 = receivedClusterData.acceleraation2
+                        clusterData.acceleration2 = receivedClusterData.acceleraation2
                         clusterData.checksum3 = receivedClusterData.checksum3
                     }
                 }
@@ -406,7 +406,7 @@ class BikeApp : Application() {
             currentRideBestAcceleration = clusterData.currentRideBestAcceleration.toString()
             currentRideBestDeceleration = clusterData.currentRideBestDeceleration.toString()
             currentRideAverageSpeed = clusterData.currentRideAverageSpeed
-            currentRideAvgInstaMileage = clusterData.currentRideAvgInstaMileage
+            currentRideAvgInstaMileage = clusterData.currentRideAvgInstantMileage
             vehicleState1 = clusterData.vehicleState1
             clutchSwitchStatus = clusterData.clutchSwitchStatus
             breakSwitchStatus = clusterData.breakSwitchStatus
@@ -426,7 +426,7 @@ class BikeApp : Application() {
             gearShiftIndication = clusterData.gearShiftIndication
             serviceReminder = clusterData.serviceReminder
             vehicleState2 = clusterData.vehicleState2
-            speedoSwVersion = clusterData.speedoSwVersion
+            speedoSwVersion = clusterData.speedometerSwVersion
             vehicleDiagnostics = clusterData.vehicleDiagnostics
             tpsErrorStatus = clusterData.tpsErrorStatus
             engineTempSensorStatus = clusterData.engineTempSensorStatus
@@ -462,7 +462,7 @@ class BikeApp : Application() {
             leanAngleDegree = clusterData.leanAngleDegree
             cruisingRange = clusterData.cruisingRange
             wheelieAngleOffset = clusterData.wheelieAngleOffset
-            acceleration2 = clusterData.acceleraation2
+            acceleration2 = clusterData.acceleration2
             torque = clusterData.torque
             tripDistance = clusterData.tripDistance
             tripTime = clusterData.tripTime
@@ -535,7 +535,7 @@ class BikeApp : Application() {
             absMilStatus = clusterData.absMilStatus
             vehicleState3 = clusterData.vehicleState3
             cruisingRange = clusterData.cruisingRange
-            acceleration2 = clusterData.acceleraation2
+            acceleration2 = clusterData.acceleration2
             checksum3 = clusterData.checksum3
             getTripADistance = clusterData.getTripADistance
             tripAMileage = clusterData.tripAMileage
